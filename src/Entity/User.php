@@ -120,6 +120,12 @@ class User implements UserInterface
      */
     private $date_updated;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="users")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $campus;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -274,6 +280,18 @@ class User implements UserInterface
     public function setDateUpdated(?\DateTimeInterface $date_updated): self
     {
         $this->date_updated = $date_updated;
+
+        return $this;
+    }
+
+    public function getCampus(): ?Campus
+    {
+        return $this->campus;
+    }
+
+    public function setCampus(?Campus $campus): self
+    {
+        $this->campus = $campus;
 
         return $this;
     }
