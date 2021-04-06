@@ -6,8 +6,6 @@ use App\Entity\User;
 use App\Entity\Campus;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class AppFixtures extends Fixture
 {
@@ -47,7 +45,7 @@ class AppFixtures extends Fixture
         $userTest->setEmail('bat@gmail.com');
         $userTest->setPassword(password_hash('bat123', PASSWORD_ARGON2ID));
 
-        $userTest->setRoles(['ROLE_USER']);
+        $userTest->setRoles(['ROLE_PARTICIPANT']);
         $userTest->setDateCreated(new \DateTime());
         $userTest->setPhone('0612345678');
         $userTest->setActive(false);
@@ -62,20 +60,19 @@ class AppFixtures extends Fixture
         for ($i = 1; $i <= 100; $i++){
             $newUser = new User();
 
-            $newUser->setUsername($faker->userName);
-            $newUser->setEmail($faker->email);
+            $newUser->setUsername($faker->userName());
+            $newUser->setEmail($faker->email());
             $newUser->setPassword(password_hash('azerty', PASSWORD_ARGON2ID));
-            $newUser->setRoles(['ROLE_USER']);
+            $newUser->setRoles(['ROLE_PARTICIPANT']);
             $newUser->setDateCreated(new \DateTime());
             $newUser->setPhone('0612345678');
             $newUser->setActive(false);
-            $newUser->setFirstName($faker->firstName);
-            $newUser->setLastName($faker->lastName);
+            $newUser->setFirstName($faker->firstName());
+            $newUser->setLastName($faker->lastName());
             $newUser->setCampus($faker->randomElement($campuses));
 
             $manager->persist($newUser);
         }
-
 
         $manager->flush();
     }
