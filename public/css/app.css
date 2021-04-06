@@ -5,7 +5,9 @@ body{
 /* Link */
 .link-blue-light{
     color: white;
+    transition: all 0.5s;
 }
 .link-blue-light:hover{
     color: #1ED8FF;
+    transition: all 0.5s;
 }
