@@ -12,6 +12,19 @@ body{
     transition: all 0.5s;
 }
 
+.btn-blue-light {
+    background: #1ED8FF;
+    color: #fff;
+    text-transform: uppercase;
+    transition: all 0.5s;
+}
+
+.btn-blue-light:hover {
+    background: #212529;
+    transition: all 0.5s;
+    color: #fff;
+}
+
 a{
     text-decoration: none;
 }
