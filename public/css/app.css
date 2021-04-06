@@ -17,6 +17,10 @@ a{
     transition: all 0.5s;
 }
 
+.text-blue-light{
+    color: #1ED8FF;
+}
+
 /* Buttons */
 .btn-blue-light, #user button {
     background: #1ED8FF;
