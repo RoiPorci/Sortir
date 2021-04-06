@@ -11,3 +11,7 @@ body{
     color: #1ED8FF;
     transition: all 0.5s;
 }
+
+a {
+    text-decoration: none;
+}
