@@ -5,9 +5,13 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @UniqueEntity(fields={"email"}, message="Cet email est déjà pris!")
+ * @UniqueEntity(fields={"username"}, message="Ce pseudo est déjà pris!")
  */
 class User implements UserInterface
 {
@@ -19,7 +23,20 @@ class User implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\NotBlank(
+     *     message="Veuillez renseigner votre pseudo!"
+     * )
+     * @Assert\Length(
+     *     min=3,
+     *     max=50,
+     *     minMessage="{{ limit }} caractères minimum svp!",
+     *     maxMessage="{{ limit }} caractères maximum svp!"
+     * )
+     * @Assert\Regex(
+     *     pattern="/^[\w]*$/",
+     *     message="Seuls les caractères alphanumériques et _ sont acceptés!"
+     * )
+     * @ORM\Column(type="string", length=50, unique=true)
      */
     private $username;
 
@@ -49,7 +66,7 @@ class User implements UserInterface
         return (string) $this->username;
     }
 
-    public function setUsername(string $username): self
+    public function setUsername(?string $username): self
     {
         $this->username = $username;
 
