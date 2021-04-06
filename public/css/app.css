@@ -2,6 +2,11 @@ body{
     font-family: 'Ubuntu', sans-serif;
 }
 
+
+a{
+    text-decoration: none;
+}
+
 /* Link */
 .link-blue-light{
     color: white;
@@ -12,19 +17,47 @@ body{
     transition: all 0.5s;
 }
 
-.btn-blue-light {
+/* Buttons */
+.btn-blue-light, #user button {
     background: #1ED8FF;
     color: #fff;
     text-transform: uppercase;
     transition: all 0.5s;
 }
 
-.btn-blue-light:hover {
+.btn-blue-light:hover, #user button:hover {
     background: #212529;
     transition: all 0.5s;
     color: #fff;
 }
 
-a{
-    text-decoration: none;
+/* Form Profil */
+
+#user > .form-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
+
+#user > .form-group > label {
+    width: 15%;
+}
+
+#user > .form-group > input {
+    width: 80%;
+    margin: 10px 0px;
+}
+
+#user > .form-group:last-child  {
+    display: flex;
+    justify-content: center;
+    color: #B0413E;
+}
+
+#user button {
+    border: none;
+    width: 35%;
+}
+
+

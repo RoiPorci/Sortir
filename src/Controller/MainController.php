@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Form\UserType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -45,6 +47,20 @@ class MainController extends AbstractController
     {
         return $this->render('main/legal-notice.html.twig', [
 
+        ]);
+    }
+
+    /**
+     * @Route("/profil", name="main_updatedPprofil")
+     */
+
+    public function updatedProfil(): Response {
+
+        $user = new User();
+        $form = $this->createForm(UserType::class, $user );
+
+        return $this->render('profil/updateProfil.html.twig', [
+            'profilForm' => $form->createView()
         ]);
     }
 }
