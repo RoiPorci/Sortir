@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\User;
+use App\Entity\Campus;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
@@ -12,7 +13,6 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        $passwordEncoder = new UserPasswordEncoder();
         $faker = \Faker\Factory::create("fr_FR");
 
         //Création des Campus
@@ -30,7 +30,7 @@ class AppFixtures extends Fixture
         foreach ($campusNames as $campusName){
             $newCampus = new Campus();
             $newCampus->setName($campusName);
-            $manager->persist();
+            $manager->persist($newCampus);
         }
 
         $manager->flush();
@@ -45,7 +45,7 @@ class AppFixtures extends Fixture
         $userTest = new User();
         $userTest->setUsername('Batman');
         $userTest->setEmail('bat@gmail.com');
-        $userTest->setPassword($passwordEncoder->encodePassword($userTest, 'bat123'));
+        $userTest->setPassword(password_hash('bat123', PASSWORD_ARGON2ID));
 
         $userTest->setRoles(['ROLE_USER']);
         $userTest->setDateCreated(new \DateTime());
@@ -55,7 +55,7 @@ class AppFixtures extends Fixture
         $userTest->setLastName('Bruce');
         $userTest->setCampus($campusStHerblain);
 
-        $manager->persist();
+        $manager->persist($userTest);
 
         //Création des utilisateurs bidons
 
@@ -64,7 +64,7 @@ class AppFixtures extends Fixture
 
             $newUser->setUsername($faker->userName);
             $newUser->setEmail($faker->email);
-            $newUser->setPassword($passwordEncoder->encodePassword($newUser, 'azerty'));
+            $newUser->setPassword(password_hash('azerty', PASSWORD_ARGON2ID));
             $newUser->setRoles(['ROLE_USER']);
             $newUser->setDateCreated(new \DateTime());
             $newUser->setPhone($faker->phoneNumber);
@@ -72,7 +72,11 @@ class AppFixtures extends Fixture
             $newUser->setFirstName($faker->firstName);
             $newUser->setLastName($faker->lastName);
             $newUser->setCampus($faker->randomElement($campuses));
+
+            $manager->persist($newUser);
         }
 
+
+        $manager->flush();
     }
 }
