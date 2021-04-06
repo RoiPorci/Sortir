@@ -67,7 +67,7 @@ class AppFixtures extends Fixture
             $newUser->setPassword(password_hash('azerty', PASSWORD_ARGON2ID));
             $newUser->setRoles(['ROLE_USER']);
             $newUser->setDateCreated(new \DateTime());
-            $newUser->setPhone($faker->phoneNumber);
+            $newUser->setPhone('0612345678');
             $newUser->setActive(false);
             $newUser->setFirstName($faker->firstName);
             $newUser->setLastName($faker->lastName);
