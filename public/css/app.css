@@ -1,0 +1,11 @@
+body{
+    font-family: 'Ubuntu', sans-serif;
+}
+
+/* Link */
+.link-blue-light{
+    color: white;
+}
+.link-blue-light:hover{
+    color: #1ED8FF;
+}
