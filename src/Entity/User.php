@@ -51,6 +51,75 @@ class User implements UserInterface
      */
     private $password;
 
+    /**
+     * @Assert\NotBlank(
+     *     message="Veuillez renseigner votre nom!"
+     * )
+     * @Assert\Length(
+     *     min=3,
+     *     max=250,
+     *     minMessage="{{ limit }} caractères minimum svp!",
+     *     maxMessage="{{ limit }} caractères maximum svp!"
+     * )
+     * @ORM\Column(type="string", length=250)
+     */
+    private $last_name;
+
+    /**
+     * @Assert\NotBlank(
+     *     message="Veuillez renseigner votre prénom!"
+     * )
+     * @Assert\Length(
+     *     min=3,
+     *     max=250,
+     *     minMessage="{{ limit }} caractères minimum svp!",
+     *     maxMessage="{{ limit }} caractères maximum svp!"
+     * )
+     * @ORM\Column(type="string", length=250)
+     */
+    private $first_name;
+
+    /**
+     * @Assert\NotBlank(
+     *     message="Veuillez renseigner votre email!"
+     * )
+     * @Assert\Length(
+     *     min=6,
+     *     max=250,
+     *     minMessage="{{ limit }} caractères minimum svp!",
+     *     maxMessage="{{ limit }} caractères maximum svp!"
+     * )
+     * @ORM\Column(type="string", length=250)
+     */
+    private $email;
+
+    /**
+     * @Assert\NotBlank(
+     *     message="Veuillez renseigner votre téléphone!"
+     * )
+     * @Assert\Regex(
+     *     pattern="/^(0|(\\+33)|(0033))[1-9][0-9]{8}$/",
+     *     message="Votre numéro de téléphone n'est pas valide!"
+     * )
+     * @ORM\Column(type="string", length=15)
+     */
+    private $phone;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $active;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $date_created;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $date_updated;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -125,5 +194,89 @@ class User implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->last_name;
+    }
+
+    public function setLastName(string $last_name): self
+    {
+        $this->last_name = $last_name;
+
+        return $this;
+    }
+
+    public function getFirstName(): ?string
+    {
+        return $this->first_name;
+    }
+
+    public function setFirstName(string $first_name): self
+    {
+        $this->first_name = $first_name;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(string $phone): self
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
+
+        return $this;
+    }
+
+    public function getDateCreated(): ?\DateTimeInterface
+    {
+        return $this->date_created;
+    }
+
+    public function setDateCreated(\DateTimeInterface $date_created): self
+    {
+        $this->date_created = $date_created;
+
+        return $this;
+    }
+
+    public function getDateUpdated(): ?\DateTimeInterface
+    {
+        return $this->date_updated;
+    }
+
+    public function setDateUpdated(?\DateTimeInterface $date_updated): self
+    {
+        $this->date_updated = $date_updated;
+
+        return $this;
     }
 }
