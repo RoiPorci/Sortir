@@ -1,30 +1,129 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Trip Detail{% endblock %}
+{% block title %}{{ tripDetail.name }}{% endblock %}
 
 {% block body %}
     <div class="container-fluid bg-light">
-        <div class="container my-2">
-            <div>
-                <ul>
-                    <li>Nom de la sortie: {{ tripDetail.name }}</li>
-                    <li>Date et heure de la sortie: {{ tripDetail.dateTimestart | date("d/m/Y") }}</li>
-                    <li>Date limite d'inscription: {{ tripDetail.dateLimitForRegistration | date("d/m/Y") }}</li>
-                    <li>Nombre de places: {{ tripDetail.maxRegistrationNumber }}</li>
-                    <li>Durée: {{ tripDetail.duration }}</li>
-                    <li>Description et infos: {{ tripDetail.details }}</li>
+        <h1 class="text-center mb-5 mt-5">{{ tripDetail.name }}</h1>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-5 my-3">
+                <ul class="list-group">
+                    <li class="list-group-item d-flex">
+                        <div class="col-6">
+                            Nom de la sortie:
+                        </div>
+                        <div class="col-6">
+                            {{ tripDetail.name }}
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex">
+                        <div class="col-6">
+                            Date et heure de la sortie:
+                        </div>
+                        <div class="col-6">
+                            {{ tripDetail.dateTimestart | date("d/m/Y") }}
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex">
+                        <div class="col-6">
+                            Date limite d'inscription:
+                        </div>
+                        <div class="col-6">
+                            {{ tripDetail.dateLimitForRegistration | date("d/m/Y") }}
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex">
+                        <div class="col-6">
+                            Nombre de places:
+                        </div>
+                        <div class="col-6">
+                            {{ tripDetail.maxRegistrationNumber }}
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex">
+                        <div class="col-6">
+                            Durée:
+                        </div>
+                        <div class="col-6">
+                            {{ tripDetail.duration }}
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex">
+                        <div class="col-6">
+                            Description et infos:
+                        </div>
+                        <div class="col-6">
+                            {{ tripDetail.details }}
+                        </div>
+                    </li>
                 </ul>
             </div>
-            <div>
-                <ul>
-                    <li>Campus: {{ tripDetail.organiserCampus.name }}</li>
-                    <li>Lieu: {{ tripDetail.location.name }}</li>
-                    <li>Rue: {{ tripDetail.location.street }}</li>
-                    <li>Code postal: {{ tripDetail.location.city.zipCode }}</li>
-                    <li>Latitude: {{ tripDetail.location.latitude }}</li>
-                    <li>Longitude: {{ tripDetail.location.longitude }}</li>
+            <div class="col-12 col-md-5 my-3">
+                <ul class="list-group">
+                    <li class="list-group-item d-flex">
+                        <div class="col-6">
+                            Campus:
+                        </div>
+                        <div class="col-6">
+                            {{ tripDetail.organiserCampus.name }}
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex">
+                        <div class="col-6">
+                            Lieu:
+                        </div>
+                        <div class="col-6">
+                            {{ tripDetail.location.name }}
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex">
+                        <div class="col-6">
+                            Rue:
+                        </div>
+                        <div class="col-6">
+                            {{ tripDetail.location.street }}
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex">
+                        <div class="col-6">
+                            Code postal:
+                        </div>
+                        <div class="col-6">
+                            {{ tripDetail.location.city.zipCode }}
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex">
+                        <div class="col-6">
+                            Latitude:
+                        </div>
+                        <div class="col-6">
+                            {{ tripDetail.location.latitude }}
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex">
+                        <div class="col-6">
+                            Longitude:
+                        </div>
+                        <div class="col-6">
+                            {{ tripDetail.location.longitude }}
+                        </div>
+                    </li>
                 </ul>
             </div>
+        </div>
+        <div class="row justify-content-center">
+            <ul>
+            {% for participant in tripDetail.participants %}
+                <li>
+                    <div>
+                        {{ participant.lastName }}
+                    </div>
+                    <div>
+                        {{ participant.firstName }}
+                    </div>
+                </li>
+            {% endfor %}
+            </ul>
         </div>
     </div>
 {% endblock %}
