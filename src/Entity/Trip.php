@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TripRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -46,6 +48,40 @@ class Trip
      * @ORM\Column(type="text")
      */
     private $details;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="trips")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $organiserCampus;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="organisedTrips")
+     */
+    private $organisers;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="participatingTrips")
+     */
+    private $participants;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=State::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $state;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Location::class, inversedBy="trips")
+     */
+    private $locations;
+
+    public function __construct()
+    {
+        $this->organisers = new ArrayCollection();
+        $this->participants = new ArrayCollection();
+        $this->locations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -123,4 +159,101 @@ class Trip
 
         return $this;
     }
+
+    public function getOrganiserCampus(): ?Campus
+    {
+        return $this->organiserCampus;
+    }
+
+    public function setOrganiserCampus(?Campus $organiserCampus): self
+    {
+        $this->organiserCampus = $organiserCampus;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getOrganisers(): Collection
+    {
+        return $this->organisers;
+    }
+
+    public function addOrganiser(User $organiser): self
+    {
+        if (!$this->organisers->contains($organiser)) {
+            $this->organisers[0] = $organiser;
+        }
+
+        return $this;
+    }
+
+    public function removeOrganiser(User $organiser): self
+    {
+        $this->organisers->removeElement($organiser);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getParticipants(): Collection
+    {
+        return $this->participants;
+    }
+
+    public function addParticipant(User $participant): self
+    {
+        if (!$this->participants->contains($participant)) {
+            $this->participants[] = $participant;
+        }
+
+        return $this;
+    }
+
+    public function removeParticipant(User $participant): self
+    {
+        $this->participants->removeElement($participant);
+
+        return $this;
+    }
+
+    public function getState(): ?State
+    {
+        return $this->state;
+    }
+
+    public function setState(?State $state): self
+    {
+        $this->state = $state;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Location[]
+     */
+    public function getLocations(): Collection
+    {
+        return $this->locations;
+    }
+
+    public function addLocation(Location $location): self
+    {
+        if (!$this->locations->contains($location)) {
+            $this->locations[0] = $location;
+        }
+
+        return $this;
+    }
+
+    public function removeLocation(Location $location): self
+    {
+        $this->locations->removeElement($location);
+
+        return $this;
+    }
+
 }

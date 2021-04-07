@@ -31,6 +31,8 @@ class AppFixtures extends Fixture
             $manager->persist($newCampus);
         }
 
+        //Création
+
         $manager->flush();
 
         //Récupération des campus

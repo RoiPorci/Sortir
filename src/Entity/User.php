@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -125,6 +127,22 @@ class User implements UserInterface
      * @ORM\JoinColumn(nullable=false)
      */
     private $campus;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Trip::class, mappedBy="organisers")
+     */
+    private $organisedTrips;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Trip::class, mappedBy="participants")
+     */
+    private $participatingTrips;
+
+    public function __construct()
+    {
+        $this->organisedTrips = new ArrayCollection();
+        $this->participatingTrips = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -292,6 +310,60 @@ class User implements UserInterface
     public function setCampus(?Campus $campus): self
     {
         $this->campus = $campus;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Trip[]
+     */
+    public function getOrganisedTrips(): Collection
+    {
+        return $this->organisedTrips;
+    }
+
+    public function addOrganisedTrip(Trip $organisedTrip): self
+    {
+        if (!$this->organisedTrips->contains($organisedTrip)) {
+            $this->organisedTrips[] = $organisedTrip;
+            $organisedTrip->addOrganiser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrganisedTrip(Trip $organisedTrip): self
+    {
+        if ($this->organisedTrips->removeElement($organisedTrip)) {
+            $organisedTrip->removeOrganiser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Trip[]
+     */
+    public function getParticipatingTrips(): Collection
+    {
+        return $this->participatingTrips;
+    }
+
+    public function addParticipatingTrip(Trip $participatingTrip): self
+    {
+        if (!$this->participatingTrips->contains($participatingTrip)) {
+            $this->participatingTrips[] = $participatingTrip;
+            $participatingTrip->addParticipant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParticipatingTrip(Trip $participatingTrip): self
+    {
+        if ($this->participatingTrips->removeElement($participatingTrip)) {
+            $participatingTrip->removeParticipant($this);
+        }
 
         return $this;
     }
