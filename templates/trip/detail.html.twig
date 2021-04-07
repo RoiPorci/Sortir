@@ -11,11 +11,20 @@
                     <li>Date et heure de la sortie: {{ tripDetail.dateTimestart | date("d/m/Y") }}</li>
                     <li>Date limite d'inscription: {{ tripDetail.dateLimitForRegistration | date("d/m/Y") }}</li>
                     <li>Nombre de places: {{ tripDetail.maxRegistrationNumber }}</li>
-                    <li>Durée: {{ tripDetail.duration |date("d/m/Y") }}</li>
-                    <li>Description et infos: {{ tripDetail.dateTimestart |date("d/m/Y") }}</li>
+                    <li>Durée: {{ tripDetail.duration }}</li>
+                    <li>Description et infos: {{ tripDetail.details }}</li>
                 </ul>
             </div>
-
+            <div>
+                <ul>
+                    <li>Campus: {{ tripDetail.organiserCampus.name }}</li>
+                    <li>Lieu: {{ tripDetail.location.name }}</li>
+                    <li>Rue: {{ tripDetail.location.street }}</li>
+                    <li>Code postal: {{ tripDetail.location.city.zipCode }}</li>
+                    <li>Latitude: {{ tripDetail.location.latitude }}</li>
+                    <li>Longitude: {{ tripDetail.location.longitude }}</li>
+                </ul>
+            </div>
         </div>
     </div>
 {% endblock %}
