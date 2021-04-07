@@ -17,6 +17,28 @@ class AppFixtures extends Fixture
     {
         $faker = \Faker\Factory::create("fr_FR");
 
+        //Création des campus
+        $campusNames = [
+            "Saint-Herblain",
+            "La Roche-sur-Yon",
+            "Rennes"
+        ];
+
+        foreach ($campusNames as $campusName){
+            $newCampus = new Campus();
+            $newCampus->setName($campusName);
+            $manager->persist($newCampus);
+        }
+
+        $manager->flush();
+
+        //Récupération des campus
+        $campusRepository = $manager->getRepository(Campus::class);
+
+        $campuses = $campusRepository->findAll();
+        $campusStHerblain = $campusRepository->findOneBy(['name' => 'Saint-Herblain']);
+
+        ///////////////////////////////////////////////////////////////////////////////////
         //Création des Etats
         $stateNames = [
           "Créée",
@@ -33,6 +55,15 @@ class AppFixtures extends Fixture
             $manager->persist($newState);
         }
 
+        $manager->flush();
+
+        //Récupération des états
+        $stateRepository = $manager->getRepository(State::class);
+        $stateOpened = $stateRepository->findOneBy(['wording' => 'Ouverte']);
+        $stateFinished = $stateRepository->findOneBy(['wording' => 'Passée']);
+        $stateClotured = $stateRepository->findOneBy(['wording' => 'Clôturée']);
+
+        ///////////////////////////////////////////////////////////////////////////////////
         //Création des Villes
         $cityInfos = [
             ["Nantes", "44000"],
@@ -54,14 +85,15 @@ class AppFixtures extends Fixture
         $cityRepository = $manager->getRepository(City::class);
         $cities = $cityRepository->findAll();
 
+        ///////////////////////////////////////////////////////////////////////////////////
         //Création des Lieux
         for ($i = 0; $i < 30; $i++){
             $newLocation = new Location();
 
-            $newLocation->setName($faker->title());
+            $newLocation->setName($faker->sentence());
             $newLocation->setStreet($faker->streetName());
-            $newLocation->setLatitude($faker->latitude);
-            $newLocation->setLongitude($faker->longitude);
+            $newLocation->setLatitude($faker->latitude());
+            $newLocation->setLongitude($faker->longitude());
             $newLocation->setCity($faker->randomElement($cities));
 
             $manager->persist($newLocation);
@@ -73,12 +105,7 @@ class AppFixtures extends Fixture
         $locationRepository = $manager->getRepository(Location::class);
         $locations = $locationRepository->findAll();
 
-        //Récupération des campus
-        $campusRepository = $manager->getRepository(Campus::class);
-
-        $campuses = $campusRepository->findAll();
-        $campusStHerblain = $campusRepository->findOneBy(['name' => 'Saint-Herblain']);
-
+        ///////////////////////////////////////////////////////////////////////////////////
         //Création de l'utilisateur de test
         $userTest = new User();
         $userTest->setUsername('Batman');
@@ -88,7 +115,7 @@ class AppFixtures extends Fixture
         $userTest->setRoles(['ROLE_PARTICIPANT']);
         $userTest->setDateCreated(new \DateTime());
         $userTest->setPhone('0612345678');
-        $userTest->setActive(false);
+        $userTest->setActive(true);
         $userTest->setFirstName('Wayne');
         $userTest->setLastName('Bruce');
         $userTest->setCampus($campusStHerblain);
@@ -97,7 +124,7 @@ class AppFixtures extends Fixture
 
         //Création des utilisateurs bidons
 
-        /*for ($i = 1; $i <= 100; $i++){
+        for ($i = 1; $i <= 100; $i++){
             $newUser = new User();
 
             $newUser->setUsername($faker->userName());
@@ -106,25 +133,75 @@ class AppFixtures extends Fixture
             $newUser->setRoles(['ROLE_PARTICIPANT']);
             $newUser->setDateCreated(new \DateTime());
             $newUser->setPhone('0612345678');
-            $newUser->setActive(false);
+            $newUser->setActive(true);
             $newUser->setFirstName($faker->firstName());
             $newUser->setLastName($faker->lastName());
             $newUser->setCampus($faker->randomElement($campuses));
 
-            $nbOrginasedTrips = $faker->numberBetween(0, 5);
-            if ($nbOrginasedTrips > 0){
-                for ($i = 1; $i <=$nbOrginasedTrips; $i++){
-                    $organisedTrip = new Trip();
-
-                    //$organisedTrip->setName($faker->);
-                }
-            }
-
             $manager->persist($newUser);
-        }*/
+        }
 
         $manager->flush();
 
+        //Récupération des participants
+        $userRepository = $manager->getRepository(User::class);
+        $participants = $userRepository->findAll();
 
+        ///////////////////////////////////////////////////////////////////////////////////
+        //Création de plusieures sorties pour chaque participant en tant qu'organisateur
+        foreach ($participants as $participant){
+            $nbOrginasedTrips = $faker->numberBetween(0, 5);
+
+            if ($nbOrginasedTrips > 0) {
+                for ($i = 1; $i <= $nbOrginasedTrips; $i++) {
+                    $date = $faker->dateTimeBetween('-2 months', '+8 months');
+                    $startDate = $date;
+                    $endRegisterDate = $date->sub(\DateInterval::createFromDateString('1 week'));
+                    $duration = $faker->numberBetween(10, 24 * 60);
+                    $now = new \DateTime();
+
+                    //Etablir l'état
+                    if ($startDate < $now) {
+                        $state = $stateFinished;
+                    } elseif ($endRegisterDate < $now) {
+                        $state = $stateClotured;
+                    } else {
+                        $state = $stateOpened;
+                    }
+
+                    $organisedTrip = new Trip();
+
+                    $organisedTrip->setName($faker->sentence());
+                    $organisedTrip->setDetails($faker->text());
+                    $organisedTrip->setState($state);
+                    $organisedTrip->setDateTimeStart($startDate);
+                    $organisedTrip->setDateLimitForRegistration($endRegisterDate);
+                    $organisedTrip->setDuration($duration);
+                    $organisedTrip->setOrganiser($participant);
+                    $organisedTrip->setOrganiserCampus($participant->getCampus());
+                    $organisedTrip->setLocation($faker->randomElement($locations));
+                    $organisedTrip->setMaxRegistrationNumber($faker->numberBetween(2, 100));
+
+                    $manager->persist($organisedTrip);
+                }
+            }
+        }
+
+        $manager->flush();
+
+        //Récupération des sorties
+        $tripRepository = $manager->getRepository(Trip::class);
+        $trips = $tripRepository->findAll();
+
+        ///////////////////////////////////////////////////////////////////////////////////
+        //Ajout de participants aux sorties
+        foreach ($trips as $trip){
+            $nbParticipants = $faker->numberBetween(1, $trip->getMaxRegistrationNumber());
+            for ($i = 1; $i <= $nbParticipants; $i++){
+                $trip->addParticipant($participants[$faker->numberBetween(0,99)]);
+            }
+        }
+
+        $manager->flush();
     }
 }
