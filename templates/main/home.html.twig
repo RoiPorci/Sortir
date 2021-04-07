@@ -15,40 +15,47 @@
     <div class="container-fluid bg-light">
         <div class="container my-2">
             <h3 class="mb-3">Filtrer les sorties</h3>
-            <form>
+
+            {{ form_start(filterForm) }}
                 <div class="row">
                     <div class="col-sm-5">
                         <div class="row mb-2">
-                            <label for="campusInput" class="col-sm-2 col-form-label">Campus</label>
+                            <div class="col-sm-2 col-form-label">
+                                {{ form_label(filterForm.campus) }}
+                            </div>
                             <div class="col-sm-10">
-                                <select class="form-select" id="campusInput" name="campus">
-
-                                </select>
+                                {{ form_widget(filterForm.campus) }}
                             </div>
                         </div>
 
                         <div class="row mb-2">
-                            <label for="nameInput" class="col-sm-2 col-form-label">Nom</label>
+                            <div class="col-sm-2 col-form-label">
+                                {{ form_label(filterForm.name) }}
+                            </div>
                             <div class="col-sm-10">
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-search"></i></span>
-                                    <input type="text" class="form-control" id="nameInput" name="name">
+                                    {{ form_widget(filterForm.name) }}
                                 </div>
                             </div>
                         </div>
 
                         <div class="row mb-2">
-                            <label for="startDateInput" class="col-sm-1 col-form-label">Entre</label>
+                            <div class="col-sm-1 col-form-label">
+                                {{ form_label(filterForm.dateStart) }}
+                            </div>
                             <div class="col-sm-5">
                                 <div class="input-group">
-                                    <input type="date" class="form-control" id="startDateInput" name="startDate">
+                                    {{ form_widget(filterForm.dateStart) }}
                                 </div>
                             </div>
 
-                            <label for="endDateInput" class="col-sm-1 col-form-label">et</label>
+                            <div class="col-sm-1 col-form-label">
+                                {{ form_label(filterForm.dateEnd) }}
+                            </div>
                             <div class="col-sm-5">
                                 <div class="input-group">
-                                    <input type="date" class="form-control" id="endDateInput" name="endDate">
+                                    {{ form_widget(filterForm.dateEnd) }}
                                 </div>
                             </div>
                         </div>
@@ -56,39 +63,39 @@
 
                     <div class="col-sm-4">
                         <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" value="" id="ckOrginaser" name="ckOrginaser">
-                            <label class="form-check-label" for="ckOrginaser">
-                                Sorties dont je suis l'organisateur/trice
-                            </label>
+                            {{ form_widget(filterForm.isOrganiser) }}
+                            <div class="form-check-label">
+                                {{ form_label(filterForm.isOrganiser) }}
+                            </div>
                         </div>
 
                         <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" value="" id="ckRegistered" name="ckRegistered">
-                            <label class="form-check-label" for="ckRegistered">
-                                Sorties auxquelles je suis inscrit/e
-                            </label>
+                            {{ form_widget(filterForm.isParticipant) }}
+                            <div class="form-check-label">
+                                {{ form_label(filterForm.isParticipant) }}
+                            </div>
                         </div>
 
                         <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" value="" id="ckNotRegistered" name="ckNotRegistered">
-                            <label class="form-check-label" for="ckNotRegistered">
-                                Sorties auxquelles je ne suis pas inscrit/e
-                            </label>
+                            {{ form_widget(filterForm.isNotParticipant) }}
+                            <div class="form-check-label">
+                                {{ form_label(filterForm.isNotParticipant) }}
+                            </div>
                         </div>
 
                         <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" value="" id="ckPast" name="ckPast">
-                            <label class="form-check-label" for="ckPast">
-                                Sorties passées
-                            </label>
+                            {{ form_widget(filterForm.past) }}
+                            <div class="form-check-label">
+                                {{ form_label(filterForm.past) }}
+                            </div>
                         </div>
                     </div>
 
                     <div class="col-sm-2 row my-2 align-items-center">
-                        <button class="btn btn-lg btn-blue-light" type="submit">Rechercher</button>
+                        <button class="btn btn-lg btn-blue-light">Rechercher</button>
                     </div>
                 </div>
-            </form>
+            {{ form_end(filterForm) }}
         </div>
     </div>
 {% endblock %}

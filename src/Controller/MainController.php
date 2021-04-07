@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\UserType;
+use App\Form\ListTripType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class MainController extends AbstractController
@@ -13,10 +15,32 @@ class MainController extends AbstractController
     /**
      * @Route("/", name="main_home")
      */
-    public function home(): Response
+    public function home(EntityManagerInterface $manager, Request $request): Response
     {
-        return $this->render('main/home.html.twig', [
+        $user = $this->getUser();
+        $filter = $this->createForm(ListTripType::class);
 
+        $filter->handleRequest($request);
+
+        if($filter->isSubmitted() && $filter->isValid()){
+            $campus = $filter->get('campus')->getData();
+            $name = $filter->get('name')->getData();
+            $dateStart = $filter->get('dateStart')->getData();
+            $dateEnd = $filter->get('dateEnd')->getData();
+            $isOrganiser = $filter->get('isOrganiser')->getData();
+            $isParticipant = $filter->get('isParticipant')->getData();
+            $isNotParticipant = $filter->get('isNotParticipant')->getData();
+            $past = $filter->get('past')->getData();
+
+            dd($campus);
+
+        }
+        else {
+
+        }
+
+        return $this->render('main/home.html.twig', [
+            'filterForm' => $filter->createView(),
         ]);
     }
 
