@@ -150,7 +150,7 @@ class AppFixtures extends Fixture
         ///////////////////////////////////////////////////////////////////////////////////
         //Création de plusieures sorties pour chaque participant en tant qu'organisateur
         foreach ($participants as $participant){
-            $nbOrginasedTrips = $faker->numberBetween(0, 5);
+            $nbOrginasedTrips = $faker->numberBetween(0, 2);
 
             if ($nbOrginasedTrips > 0) {
                 for ($i = 1; $i <= $nbOrginasedTrips; $i++) {
@@ -180,7 +180,7 @@ class AppFixtures extends Fixture
                     $organisedTrip->setOrganiser($participant);
                     $organisedTrip->setOrganiserCampus($participant->getCampus());
                     $organisedTrip->setLocation($faker->randomElement($locations));
-                    $organisedTrip->setMaxRegistrationNumber($faker->numberBetween(2, 100));
+                    $organisedTrip->setMaxRegistrationNumber($faker->numberBetween(2, 50));
 
                     $manager->persist($organisedTrip);
                 }
