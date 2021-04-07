@@ -97,7 +97,7 @@ class AppFixtures extends Fixture
 
         //Création des utilisateurs bidons
 
-        for ($i = 1; $i <= 100; $i++){
+        /*for ($i = 1; $i <= 100; $i++){
             $newUser = new User();
 
             $newUser->setUsername($faker->userName());
@@ -121,7 +121,7 @@ class AppFixtures extends Fixture
             }
 
             $manager->persist($newUser);
-        }
+        }*/
 
         $manager->flush();
 

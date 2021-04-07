@@ -12,12 +12,12 @@ class TripController extends AbstractController
     /**
      * @Route("/trip/{id}", name="trip_getDetail")
      */
-    public function getDetail(Integer $id, TripRepository $tripRepository): Response
+    public function getDetail($id, TripRepository $tripRepository): Response
     {
         $tripDetail = $tripRepository->find($id);
 
         return $this->render('trip/detail.html.twig', [
-            'tripDetail' => $tripDetail,
+            'tripDetail' => $tripDetail
         ]);
     }
 }

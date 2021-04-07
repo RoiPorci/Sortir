@@ -5,9 +5,16 @@
 {% block body %}
     <div class="container-fluid bg-light">
         <div class="container my-2">
-            <ul>
-                <li>Nom de la sortie: {{  }}</li>
-            </ul>
+            <div>
+                <ul>
+                    <li>Nom de la sortie: {{ tripDetail.name }}</li>
+                    <li>Date et heure de la sortie: {{ tripDetail.dateTimestart | date("d/m/Y") }}</li>
+                    <li>Date limite d'inscription: {{ tripDetail.dateLimitForRegistration | date("d/m/Y") }}</li>
+                    <li>Nombre de places: {{ tripDetail.maxRegistrationNumber }}</li>
+                    <li>Durée: {{ tripDetail.duration |date("d/m/Y") }}</li>
+                    <li>Description et infos: {{ tripDetail.dateTimestart |date("d/m/Y") }}</li>
+                </ul>
+            </div>
 
         </div>
     </div>
