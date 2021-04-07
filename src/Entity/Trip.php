@@ -80,9 +80,7 @@ class Trip
 
     public function __construct()
     {
-        $this->organisers = new ArrayCollection();
         $this->participants = new ArrayCollection();
-        $this->locations = new ArrayCollection();
     }
 
     public function getId(): ?int
