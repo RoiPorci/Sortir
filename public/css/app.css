@@ -37,6 +37,10 @@ a{
 
 /* Form Profil */
 
+#formProfil {
+    margin-left: 30px;
+}
+
 #user > .form-group {
     display: flex;
     justify-content: space-between;
@@ -45,11 +49,10 @@ a{
 }
 
 #user > .form-group > label {
-    width: 15%;
+    width: 25%;
 }
 
 #user > .form-group > input {
-    width: 80%;
     margin: 10px 0px;
 }
 

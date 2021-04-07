@@ -50,17 +50,4 @@ class MainController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/profil", name="main_updatedPprofil")
-     */
-
-    public function updatedProfil(): Response {
-
-        $user = new User();
-        $form = $this->createForm(UserType::class, $user );
-
-        return $this->render('profil/updateProfil.html.twig', [
-            'profilForm' => $form->createView()
-        ]);
-    }
 }

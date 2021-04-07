@@ -3,10 +3,19 @@
 {% block title %}{{ parent() }}Mentions légales{% endblock %}
 
 {% block body %}
-    <section class="container mb-5 mt-5">
-        <h1 class="text-center">Gérer mon profil !</h1>
-        <article id="formProfil">
-            {{ form(profilForm) }}
+    <section class="container">
+        <h1 class="text-center mb-5 mt-5">Gérer mon profil !</h1>
+        <article class="d-flex justify-content-center col-12 mb-5">
+            <div class="col-3 mr-2"><img class="col-12" alt="photo" src="https://zupimages.net/up/21/14/2yq6.jpg"></div>
+            <div class="col-6 ml-5" id="formProfil">
+                {{ form_start(profilForm) }}
+                {{ form_widget(profilForm) }}
+                <div class="mt-5 d-flex justify-content-between">
+                    <button class="btn btn-blue-light col-5 mr-5">Sauvegarder</button>
+                    <a class="btn-success btn col-5 ml-5" href="{{ path('main_home') }}">Annuler</a>
+                </div>
+                {{ form_end(profilForm) }}
+            </div>
         </article>
     </section>
 {% endblock %}
