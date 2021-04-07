@@ -2,6 +2,10 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\City;
+use App\Entity\Location;
+use App\Entity\State;
+use App\Entity\Trip;
 use App\Entity\User;
 use App\Entity\Campus;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -13,27 +17,61 @@ class AppFixtures extends Fixture
     {
         $faker = \Faker\Factory::create("fr_FR");
 
-        //Création des Campus
-        $campusNames = [
-            "Saint-Herblain",
-            "Rennes",
-            "Quimper",
-            "Niort",
-            "La Roche-sur-Yon",
-            "Angers",
-            "Laval",
-            "Mans"
+        //Création des Etats
+        $stateNames = [
+          "Créée",
+          "Ouverte",
+          "Clôturée",
+          "Activité en cours",
+          "Passée",
+          "Annulée"
         ];
 
-        foreach ($campusNames as $campusName){
-            $newCampus = new Campus();
-            $newCampus->setName($campusName);
-            $manager->persist($newCampus);
+        foreach ($stateNames as $stateName){
+            $newState = new State();
+            $newState->setWording($stateName);
+            $manager->persist($newState);
         }
 
-        //Création
+        //Création des Villes
+        $cityInfos = [
+            ["Nantes", "44000"],
+            ["La Roche-sur-Yon", "85000"],
+            ["Rennes", "35000"],
+            ["Coupvray", "77700"],
+        ];
+
+        foreach ($cityInfos as $cityInfo){
+            $newCity = new City();
+            $newCity->setName($cityInfo[0]);
+            $newCity->setZipCode($cityInfo[1]);
+            $manager->persist($newCity);
+        }
 
         $manager->flush();
+
+        //Récupération des Villes
+        $cityRepository = $manager->getRepository(City::class);
+        $cities = $cityRepository->findAll();
+
+        //Création des Lieux
+        for ($i = 0; $i < 30; $i++){
+            $newLocation = new Location();
+
+            $newLocation->setName($faker->title());
+            $newLocation->setStreet($faker->streetName());
+            $newLocation->setLatitude($faker->latitude);
+            $newLocation->setLongitude($faker->longitude);
+            $newLocation->setCity($faker->randomElement($cities));
+
+            $manager->persist($newLocation);
+        }
+
+        $manager->flush();
+
+        //Récupération des Lieux
+        $locationRepository = $manager->getRepository(Location::class);
+        $locations = $locationRepository->findAll();
 
         //Récupération des campus
         $campusRepository = $manager->getRepository(Campus::class);
@@ -73,9 +111,20 @@ class AppFixtures extends Fixture
             $newUser->setLastName($faker->lastName());
             $newUser->setCampus($faker->randomElement($campuses));
 
+            $nbOrginasedTrips = $faker->numberBetween(0, 5);
+            if ($nbOrginasedTrips > 0){
+                for ($i = 1; $i <=$nbOrginasedTrips; $i++){
+                    $organisedTrip = new Trip();
+
+                    //$organisedTrip->setName($faker->);
+                }
+            }
+
             $manager->persist($newUser);
         }
 
         $manager->flush();
+
+
     }
 }

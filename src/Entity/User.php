@@ -129,19 +129,20 @@ class User implements UserInterface
     private $campus;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Trip::class, mappedBy="organisers")
-     */
-    private $organisedTrips;
-
-    /**
      * @ORM\ManyToMany(targetEntity=Trip::class, mappedBy="participants")
      */
     private $participatingTrips;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Trip::class, mappedBy="organiser")
+     */
+    private $organisedTrips;
+
     public function __construct()
     {
-        $this->organisedTrips = new ArrayCollection();
+
         $this->participatingTrips = new ArrayCollection();
+        $this->organisedTrips = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -317,33 +318,6 @@ class User implements UserInterface
     /**
      * @return Collection|Trip[]
      */
-    public function getOrganisedTrips(): Collection
-    {
-        return $this->organisedTrips;
-    }
-
-    public function addOrganisedTrip(Trip $organisedTrip): self
-    {
-        if (!$this->organisedTrips->contains($organisedTrip)) {
-            $this->organisedTrips[] = $organisedTrip;
-            $organisedTrip->addOrganiser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeOrganisedTrip(Trip $organisedTrip): self
-    {
-        if ($this->organisedTrips->removeElement($organisedTrip)) {
-            $organisedTrip->removeOrganiser($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Trip[]
-     */
     public function getParticipatingTrips(): Collection
     {
         return $this->participatingTrips;
@@ -363,6 +337,36 @@ class User implements UserInterface
     {
         if ($this->participatingTrips->removeElement($participatingTrip)) {
             $participatingTrip->removeParticipant($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Trip[]
+     */
+    public function getOrganisedTrips(): Collection
+    {
+        return $this->organisedTrips;
+    }
+
+    public function addOrganisedTrip(Trip $organisedTrip): self
+    {
+        if (!$this->organisedTrips->contains($organisedTrip)) {
+            $this->organisedTrips[] = $organisedTrip;
+            $organisedTrip->setOrganiser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrganisedTrip(Trip $organisedTrip): self
+    {
+        if ($this->organisedTrips->removeElement($organisedTrip)) {
+            // set the owning side to null (unless already changed)
+            if ($organisedTrip->getOrganiser() === $this) {
+                $organisedTrip->setOrganiser(null);
+            }
         }
 
         return $this;

@@ -56,11 +56,6 @@ class Trip
     private $organiserCampus;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="organisedTrips")
-     */
-    private $organisers;
-
-    /**
      * @ORM\ManyToMany(targetEntity=User::class, inversedBy="participatingTrips")
      */
     private $participants;
@@ -72,9 +67,16 @@ class Trip
     private $state;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Location::class, inversedBy="trips")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="organisedTrips")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $locations;
+    private $organiser;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Location::class, inversedBy="trips")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $location;
 
     public function __construct()
     {
@@ -175,30 +177,6 @@ class Trip
     /**
      * @return Collection|User[]
      */
-    public function getOrganisers(): Collection
-    {
-        return $this->organisers;
-    }
-
-    public function addOrganiser(User $organiser): self
-    {
-        if (!$this->organisers->contains($organiser)) {
-            $this->organisers[0] = $organiser;
-        }
-
-        return $this;
-    }
-
-    public function removeOrganiser(User $organiser): self
-    {
-        $this->organisers->removeElement($organiser);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|User[]
-     */
     public function getParticipants(): Collection
     {
         return $this->participants;
@@ -232,26 +210,26 @@ class Trip
         return $this;
     }
 
-    /**
-     * @return Collection|Location[]
-     */
-    public function getLocations(): Collection
+    public function getOrganiser(): ?User
     {
-        return $this->locations;
+        return $this->organiser;
     }
 
-    public function addLocation(Location $location): self
+    public function setOrganiser(?User $organiser): self
     {
-        if (!$this->locations->contains($location)) {
-            $this->locations[0] = $location;
-        }
+        $this->organiser = $organiser;
 
         return $this;
     }
 
-    public function removeLocation(Location $location): self
+    public function getLocation(): ?Location
     {
-        $this->locations->removeElement($location);
+        return $this->location;
+    }
+
+    public function setLocation(?Location $location): self
+    {
+        $this->location = $location;
 
         return $this;
     }

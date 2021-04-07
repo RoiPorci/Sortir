@@ -46,7 +46,7 @@ class Location
     private $city;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Trip::class, mappedBy="locations")
+     * @ORM\OneToMany(targetEntity=Trip::class, mappedBy="location")
      */
     private $trips;
 
@@ -132,7 +132,7 @@ class Location
     {
         if (!$this->trips->contains($trip)) {
             $this->trips[] = $trip;
-            $trip->addLocation($this);
+            $trip->setLocation($this);
         }
 
         return $this;
@@ -141,9 +141,13 @@ class Location
     public function removeTrip(Trip $trip): self
     {
         if ($this->trips->removeElement($trip)) {
-            $trip->removeLocation($this);
+            // set the owning side to null (unless already changed)
+            if ($trip->getLocation() === $this) {
+                $trip->setLocation(null);
+            }
         }
 
         return $this;
     }
+
 }
