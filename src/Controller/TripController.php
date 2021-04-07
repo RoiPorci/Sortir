@@ -17,7 +17,7 @@ class TripController extends AbstractController
         $tripDetail = $tripRepository->find($id);
 
         return $this->render('trip/detail.html.twig', [
-            'controller_name' => 'TripController',
+            'tripDetail' => $tripDetail,
         ]);
     }
 }
