@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }}Créer une sortie{% endblock %}
+
+{% block body %}
+    <section class="container">
+        <h1 class="text-center mb-5 mt-5">Créer une sortie !</h1>
+        <article id="formTrip" class="mb-5">
+            {{ form_start(tripForm) }}
+            <aside class="d-flex justify-content-between">
+                <div class="col-md-6 col-12">
+                    {{ form_row(tripForm.name) }}
+                    {{ form_row(tripForm.dateTimeStart) }}
+                    {{ form_row(tripForm.dateLimitForRegistration) }}
+                    {{ form_row(tripForm.maxRegistrationNumber) }}
+                    {{ form_row(tripForm.details) }}
+                </div>
+                <div class="col-md-5 col-12">
+                    {{ form_row(tripForm.organiserCampus) }}
+                </div>
+            </aside>
+
+            <div class="mt-5 d-flex justify-content-between">
+                <button class="btn btn-blue-light col-5 mr-5">Sauvegarder</button>
+                <a class="btn-success btn col-5 ml-5" href="{{ path('main_home') }}">Annuler</a>
+            </div>
+            {{ form_end(tripForm) }}
+        </article>
+    </section>
+    <section class="container">
+
+    </section>
+{% endblock %}

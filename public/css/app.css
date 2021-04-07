@@ -22,11 +22,16 @@ a{
 }
 
 /* Buttons */
-.btn-blue-light, #user button {
+.btn-blue-light, #user button, .btn-blue-light-nav {
     background: #1ED8FF;
     color: #fff;
-    text-transform: uppercase;
     transition: all 0.5s;
+}
+
+.btn-blue-light-nav:hover {
+    background: #fff;
+    transition: all 0.5s;
+    color: #212529;
 }
 
 .btn-blue-light:hover, #user button:hover {
@@ -35,25 +40,26 @@ a{
     color: #fff;
 }
 
-/* Form Profil */
+/* Form Profil - Form Trip */
 
 #formProfil {
     margin-left: 30px;
 }
 
-#user > .form-group {
+#user > .form-group, #formTrip .form-group {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    margin: 10px 0px;
 }
 
 #user > .form-group > label {
     width: 25%;
 }
 
-#user > .form-group > input {
-    margin: 10px 0px;
+#formTrip label {
+    width: 60%;
 }
 
 #user > .form-group:last-child  {
