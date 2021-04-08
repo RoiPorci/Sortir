@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Trip;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -17,6 +18,73 @@ class TripRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Trip::class);
+    }
+
+    public function findTripsFiltered($filter, User $user){
+        $queryBuilder = $this->createQueryBuilder('t');
+        $queryBuilder->select('t');
+
+        //Application du filtre
+        if($filter['campus']){
+            $queryBuilder->andWhere('t.organiserCampus = :campus');
+            $queryBuilder->setParameter(':campus', $filter['campus']);
+        }
+
+        if($filter['name']){
+            $queryBuilder->andWhere('t.name LIKE :name');
+            $queryBuilder->setParameter('name', '%'.$filter['name'].'%');
+        }
+
+        if ($filter['dateStart']){
+            $queryBuilder->andWhere('t.dateTimeStart >= :dateStart');
+            $queryBuilder->setParameter(':dateStart', $filter['dateStart']);
+        }
+
+        if ($filter['dateEnd']){
+            $queryBuilder->andWhere('t.dateTimeStart <= :dateEnd');
+            $queryBuilder->setParameter(':dateEnd', $filter['dateEnd']);
+        }
+
+        if($filter['isOrganiser']){
+            $queryBuilder->andWhere('t.organiser = :user');
+        }
+        else {
+            $queryBuilder->andWhere('t.organiser != :user');
+        }
+
+        if($filter['isParticipant'] && !$filter['isNotParticipant']){
+            $queryBuilder->andWhere(':user MEMBER OF t.participants');
+        }
+        elseif ($filter['isParticipant'] && !$filter['isNotParticipant']){
+            $queryBuilder->andWhere(':user NOT MEMBER OF t.participants');
+        }
+
+        $queryBuilder->setParameter(':user', $user);
+
+
+        if($filter['past']){
+            $queryBuilder->andWhere('t.dateTimeStart < :now');
+        }
+        else {
+            $queryBuilder->andWhere('t.dateTimeStart > :now');
+
+        }
+        $queryBuilder->setParameter(':now', new \DateTime());
+
+
+        //On ajoute des jointures pour éviter les mutltiples requêtes par Doctrine
+        $queryBuilder->join('t.organiser', 'o');
+        $queryBuilder->addSelect('o');
+
+        $queryBuilder->join('t.state', 's');
+        $queryBuilder->addSelect('s');
+
+        //Mise en forme des résultats :
+        $queryBuilder->addOrderBy('t.dateTimeStart', 'DESC');
+
+        $query = $queryBuilder->getQuery();
+
+        return $query->getResult();
     }
 
     // /**

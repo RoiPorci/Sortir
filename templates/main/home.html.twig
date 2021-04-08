@@ -18,21 +18,21 @@
 
             {{ form_start(filterForm) }}
                 <div class="row">
-                    <div class="col-sm-5">
-                        <div class="row mb-2">
-                            <div class="col-sm-2 col-form-label">
+                    <div class="col-md-5">
+                        <div class="form-group row mb-2">
+                            <div class="col-md-2 col-form-label">
                                 {{ form_label(filterForm.campus) }}
                             </div>
-                            <div class="col-sm-10">
+                            <div class="col-md-10">
                                 {{ form_widget(filterForm.campus) }}
                             </div>
                         </div>
 
                         <div class="row mb-2">
-                            <div class="col-sm-2 col-form-label">
+                            <div class="col-md-2 col-form-label">
                                 {{ form_label(filterForm.name) }}
                             </div>
-                            <div class="col-sm-10">
+                            <div class="col-md-10">
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-search"></i></span>
                                     {{ form_widget(filterForm.name) }}
@@ -41,19 +41,19 @@
                         </div>
 
                         <div class="row mb-2">
-                            <div class="col-sm-1 col-form-label">
-                                {{ form_label(filterForm.dateStart) }}
+                            <div class="col-md-1 col-form-label">
+                                Entre
                             </div>
-                            <div class="col-sm-5">
+                            <div class="col-md-5">
                                 <div class="input-group">
                                     {{ form_widget(filterForm.dateStart) }}
                                 </div>
                             </div>
 
-                            <div class="col-sm-1 col-form-label">
-                                {{ form_label(filterForm.dateEnd) }}
+                            <div class="col-md-1 col-form-label">
+                                et
                             </div>
-                            <div class="col-sm-5">
+                            <div class="col-md-5">
                                 <div class="input-group">
                                     {{ form_widget(filterForm.dateEnd) }}
                                 </div>
@@ -61,7 +61,7 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-4">
+                    <div class="col-md-4">
                         <div class="form-check mb-2">
                             {{ form_widget(filterForm.isOrganiser) }}
                             <div class="form-check-label">
@@ -91,11 +91,32 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-2 row my-2 align-items-center">
+                    <div class="col-md-2 row my-2 align-items-center">
                         <button class="btn btn-lg btn-blue-light">Rechercher</button>
                     </div>
                 </div>
             {{ form_end(filterForm) }}
         </div>
+    </div>
+
+    <div class="container my-2">
+        <ul class="list-group-flush">
+        {% for trip in trips %}
+            <li class="d-flex list-group-item">
+                <div>{{ trip.name }}</div>
+                <div>{{ trip.dateTimeStart|date('d/m/Y H:i') }}</div>
+                <div>{{ trip.dateLimitForRegistration|date('d/m/Y') }}</div>
+                <div>{{ trip.participants|length }}/{{ trip.maxRegistrationNumber }}</div>
+                <div>{{ trip.state.wording }}</div>
+                <div></div>
+                <div>{{ trip.organiser.username }}</div>
+                <div><a href="{{ path('trip_getDetail', {id:trip.id}) }}">Afficher</a></div>
+            </li>
+        {% else %}
+
+            <div class=>Aucun résultat ne correspond à votre recherche!</div>
+
+        {% endfor %}
+        </ul>
     </div>
 {% endblock %}

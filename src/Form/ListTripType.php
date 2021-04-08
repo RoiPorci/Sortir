@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use Symfony\Component\Security\Core\Security;
 use App\Entity\Campus;
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -15,20 +14,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ListTripType extends AbstractType
 {
-    private $security;
-
-    public function __construct(Security $security){
-        $this->security = $security;
-
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        /** @var User */
-        $user = $this->security->getUser();
-
-        //dd($user);
-
         $builder
             ->add('campus', EntityType::class, [
                 'class' => Campus::class,
@@ -36,7 +23,6 @@ class ListTripType extends AbstractType
                 'label' => 'Campus',
                 'required' => false,
                 'placeholder' => false,
-                'data' => $user->getCampus(),
                 "attr" => [
                     "class" => "form-select"
                 ],
@@ -44,32 +30,39 @@ class ListTripType extends AbstractType
             ->add('name', TextType::class, [
                 'label' => 'Nom',
                 'required' => false,
+                'mapped' => false,
             ])
             ->add('dateStart', DateType::class, [
                 'label' => 'Entre',
                 'required' => false,
                 'widget' => 'single_text',
+                'mapped' => false,
             ])
             ->add('dateEnd', DateType::class, [
                 'label' => 'et',
                 'required' => false,
                 'widget' => 'single_text',
+                'mapped' => false,
             ])
             ->add('isOrganiser', CheckboxType::class, [
                 'label' => "Sorties dont je suis l'organisateur/trice",
                 'required' => false,
+                'mapped' => false,
             ])
             ->add('isParticipant', CheckboxType::class, [
                 'label' => "Sorties auxquelles je suis inscrit/e",
                 'required' => false,
+                'mapped' => false,
             ])
             ->add('isNotParticipant', CheckboxType::class, [
-                'label' => "Sorties auxquelles je suis inscrit/e",
+                'label' => "Sorties auxquelles je ne suis pas inscrit/e",
                 'required' => false,
+                'mapped' => false,
             ])
             ->add('past', CheckboxType::class, [
                 'label' => "Sorties passées",
                 'required' => false,
+                'mapped' => false,
             ])
         ;
     }
@@ -77,7 +70,7 @@ class ListTripType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            // Configure your form options here
+            'data_class' => User::class,
         ]);
     }
 }
