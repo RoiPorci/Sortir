@@ -26,7 +26,7 @@ class MainController extends AbstractController
 
         $maxTrips = 20;
 
-        $filter = $this->createForm(ListTripType::class);
+        $filter = $this->createForm(ListTripType::class, null, ['attr' => ['id' => 'filter_form']]);
 
         $filter->handleRequest($request);
 
@@ -57,6 +57,7 @@ class MainController extends AbstractController
         return $this->render('main/home.html.twig', [
             'filterForm' => $filter->createView(),
             'trips' => $trips,
+            'currentPage' => $page,
             'totalTrips' => $totalTrips,
             'totalPages' => $totalPages,
         ]);
