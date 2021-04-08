@@ -73,6 +73,14 @@ a{
     width: 35%;
 }
 
+#trip_details {
+    height: 150px;
+    resize: none;
+    scrollbar-width: 5px;
+    scrollbar-color: #1ED8FF;
+}
+
+
 /*list*/
 
 .participants-list{
@@ -82,11 +90,11 @@ a{
     scrollbar-color: #1ED8FF;
 }
 
-.participants-list::-webkit-scrollbar{
+.participants-list::-webkit-scrollbar, textarea::-webkit-scrollbar{
     width: 5px;
 }
 
-.participants-list::-webkit-scrollbar-thumb{
+.participants-list::-webkit-scrollbar-thumb, textarea::-webkit-scrollbar-thumb{
     background-color: #1ED8FF;
 }
 

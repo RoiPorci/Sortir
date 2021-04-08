@@ -2,8 +2,15 @@
 
 namespace App\Form;
 
+use App\Entity\City;
+use App\Entity\Location;
 use App\Entity\Trip;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -17,11 +24,13 @@ class TripType extends AbstractType
                 'label'=> 'Nom de la sortie :',
                 'required' => false
             ])
-            ->add('dateTimeStart', TextType::class, [
-                'label'=> 'Date et heure de la sortie :',
+            ->add('dateTimeStart', DateTimeType::class, [
+                'widget' => 'single_text',
+                'label' => 'Date et heure de la sortie :',
                 'required' => false
             ])
-            ->add('dateLimitForRegistration', TextType::class, [
+            ->add('dateLimitForRegistration', DateType::class, [
+                'widget' => 'single_text',
                 'label'=> "Date limite d'inscription :",
                 'required' => false
             ])
@@ -33,14 +42,11 @@ class TripType extends AbstractType
                 'label'=> "Nombre de places :",
                 'required' => false
             ])
-            ->add('details', TextType::class, [
+            ->add('details', TextareaType::class, [
                 'label'=> "Description et infos :",
                 'required' => false
             ])
-            ->add('organiserCampus', TextType::class, [
-                'label'=> "Campus :",
-                'required' => false
-            ])
+
         ;
     }
 
