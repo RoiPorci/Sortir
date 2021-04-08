@@ -138,6 +138,11 @@ class User implements UserInterface
      */
     private $organisedTrips;
 
+    /**
+     * @ORM\Column(type="string", length=250, nullable=true)
+     */
+    private $pictureFileName;
+
     public function __construct()
     {
 
@@ -224,7 +229,7 @@ class User implements UserInterface
         return $this->last_name;
     }
 
-    public function setLastName(string $last_name): self
+    public function setLastName(?string $last_name): self
     {
         $this->last_name = $last_name;
 
@@ -236,7 +241,7 @@ class User implements UserInterface
         return $this->first_name;
     }
 
-    public function setFirstName(string $first_name): self
+    public function setFirstName(?string $first_name): self
     {
         $this->first_name = $first_name;
 
@@ -248,7 +253,7 @@ class User implements UserInterface
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(?string $email): self
     {
         $this->email = $email;
 
@@ -260,7 +265,7 @@ class User implements UserInterface
         return $this->phone;
     }
 
-    public function setPhone(string $phone): self
+    public function setPhone(?string $phone): self
     {
         $this->phone = $phone;
 
@@ -368,6 +373,18 @@ class User implements UserInterface
                 $organisedTrip->setOrganiser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPictureFileName(): ?string
+    {
+        return $this->pictureFileName;
+    }
+
+    public function setPictureFileName(?string $pictureFileName): self
+    {
+        $this->pictureFileName = $pictureFileName;
 
         return $this;
     }

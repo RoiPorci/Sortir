@@ -6,7 +6,11 @@
     <section class="container">
         <h1 class="text-center mb-5 mt-5">Gérer mon profil !</h1>
         <article class="d-flex justify-content-center col-12 mb-5">
+            {% if app.user.pictureFileName %}
+            <div class="col-3 mr-2"><img class="col-12" alt="photo" src="{{ asset('img/profile/small/'~user.pictureFileName ) }}"></div>
+            {% else %}
             <div class="col-3 mr-2"><img class="col-12" alt="photo" src="https://zupimages.net/up/21/14/2yq6.jpg"></div>
+            {% endif %}
             <div class="col-6 ml-5" id="formProfil">
                 {{ form_start(profilForm) }}
                 {{ form_widget(profilForm) }}
