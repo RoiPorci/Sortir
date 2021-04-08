@@ -73,4 +73,24 @@ a{
     width: 35%;
 }
 
+/*list*/
 
+.participants-list{
+    height: 200px;
+    overflow-y: scroll;
+    scrollbar-width: 5px;
+    scrollbar-color: #1ED8FF;
+}
+
+.participants-list::-webkit-scrollbar{
+    width: 5px;
+}
+
+.participants-list::-webkit-scrollbar-thumb{
+    background-color: #1ED8FF;
+}
+
+#participants-list-head{
+    background-color: #212529;
+    color: white;
+}
