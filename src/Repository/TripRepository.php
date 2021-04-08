@@ -46,17 +46,34 @@ class TripRepository extends ServiceEntityRepository
         }
 
         if($filter['isOrganiser']){
-            $queryBuilder->andWhere('t.organiser = :user');
+            if($filter['isParticipant'] || $filter['isNotParticipant']){
+                $queryBuilder->orWhere('t.organiser = :user');
+            }
+            else {
+                $queryBuilder->andWhere('t.organiser = :user');
+            }
         }
         else {
             $queryBuilder->andWhere('t.organiser != :user');
         }
 
-        if($filter['isParticipant'] && !$filter['isNotParticipant']){
-            $queryBuilder->andWhere(':user MEMBER OF t.participants');
+        if($filter['isParticipant']){
+            if($filter['isOrganiser'] || $filter['isNotParticipant']){
+                $queryBuilder->orWhere(':user MEMBER OF t.participants');
+            }
+            else {
+                $queryBuilder->andWhere(':user MEMBER OF t.participants');
+            }
+
         }
-        elseif ($filter['isParticipant'] && !$filter['isNotParticipant']){
-            $queryBuilder->andWhere(':user NOT MEMBER OF t.participants');
+
+        if($filter['isNotParticipant']){
+            if($filter['isOrganiser'] || $filter['isParticipant']){
+                $queryBuilder->orWhere(':user NOT MEMBER OF t.participants');
+            }
+            else {
+                $queryBuilder->andWhere(':user NOT MEMBER OF t.participants');
+            }
         }
 
         $queryBuilder->setParameter(':user', $user);
