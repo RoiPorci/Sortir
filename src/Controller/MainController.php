@@ -2,11 +2,10 @@
 
 namespace App\Controller;
 
-use App\Entity\Trip;
 use App\Entity\User;
 use App\Form\ListTripType;
 
-use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\TripRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,17 +14,19 @@ use Symfony\Component\Routing\Annotation\Route;
 class MainController extends AbstractController
 {
     /**
-     * @Route("/", name="main_home")
-     * @param EntityManagerInterface $manager
+     * @Route("/{page}", name="main_home", requirements={"page": "\d+"})
+     * @param TripRepository $tripRepository
      * @param Request $request
      * @return Response
      */
-    public function home(EntityManagerInterface $manager, Request $request): Response
+    public function home(int $page = 1 , TripRepository $tripRepository, Request $request): Response
     {
+        /** @var User */
         $user = $this->getUser();
-        $trips = [];
 
-        $filter = $this->createForm(ListTripType::class, $user);
+        $maxTrips = 20;
+
+        $filter = $this->createForm(ListTripType::class);
 
         $filter->handleRequest($request);
 
@@ -42,16 +43,22 @@ class MainController extends AbstractController
             'past' => $filter->get('past')->getData()
             ];
 
-            $tripRepository = $manager->getRepository(Trip::class);
-            $trips = $tripRepository->findTripsFiltered($filterParameters, $user);
         }
         else {
-
+            $filterParameters = null;
         }
+
+        $results = $tripRepository->findTripsFiltered($filterParameters, $user, $page, $maxTrips);
+
+        $trips = $results['trips'];
+        $totalTrips = $results['nbTrips'];
+        $totalPages = ceil($totalTrips/$maxTrips);
 
         return $this->render('main/home.html.twig', [
             'filterForm' => $filter->createView(),
-            'trips' => $trips
+            'trips' => $trips,
+            'totalTrips' => $totalTrips,
+            'totalPages' => $totalPages,
         ]);
     }
 
