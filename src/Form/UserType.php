@@ -64,7 +64,10 @@ class UserType extends AbstractType
             ->add('campus', EntityType::class, [
                 'label' => 'Campus :',
                 'class' => Campus::class,
-                'choice_label' => 'name'
+                'choice_label' => 'name',
+                'attr' => [
+                    "class" => "form-select"
+                ]
             ])
             ->add('picture', FileType::class, [
                 'mapped' => false,

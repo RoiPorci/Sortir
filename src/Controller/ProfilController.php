@@ -4,6 +4,7 @@ namespace App\Controller;
 
 
 use App\Form\UserType;
+use App\Repository\UserRepository;
 use claviska\SimpleImage;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,7 +18,7 @@ use Symfony\Component\String\ByteString;
 class ProfilController extends AbstractController
 {
     /**
-     * @Route("/profil", name="profil_updatedProfil")
+     * @Route("/profil/modifier", name="profil_updatedProfil" )
      */
     public function updatedProfil(EntityManagerInterface $manager, Request $request, UserPasswordEncoderInterface $encoder): Response {
 
@@ -69,6 +70,16 @@ class ProfilController extends AbstractController
         return $this->render('profil/updateProfil.html.twig', [
             'profilForm' => $form->createView(),
             'user' => $user
+        ]);
+    }
+
+    /**
+     * @Route("/profil/{id}", name="profil_show", requirements={"id"="\d+"})
+     */
+    public function showProfil(int $id, UserRepository $userRepository) {
+
+        return $this->render('profil/showProfil.html.twig', [
+            'user' => $userRepository->find($id)
         ]);
     }
 }
