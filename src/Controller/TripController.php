@@ -13,6 +13,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TripController extends AbstractController
 {
+    const OUVERTE = 'Ouverte';
+
     /**
      * @Route("/trip/{id}", name="trip_getDetail")
      */
@@ -36,5 +38,33 @@ class TripController extends AbstractController
         return $this->render('trip/createTrip.html.twig', [
             'tripForm' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/register/trip/{id}", name="trip_registerForATrip")
+     */
+    public function registerForATrip($id, TripRepository $tripRepository): Response
+    {
+        $user = $this->getUser();
+
+        $tripForRegistration = $tripRepository->findATripForRegister($id);
+
+        $tripState = $tripForRegistration->getState()->getWording();
+        $tripDateLimitForRegistration = $tripForRegistration->getDateLimitForRegistration();
+        $tripMaxRegistrationNumber = $tripForRegistration->getMaxRegistrationNumber();
+        $tripParticipants = $tripForRegistration->getParticipants();
+        $now = new \DateTime();
+        dd($tripParticipants);
+
+        if ($tripState === self::OUVERTE
+            AND $tripDateLimitForRegistration >= $now
+            AND count($tripParticipants) < $tripMaxRegistrationNumber
+            AND in_array($user, $tripParticipants))
+        {
+            dd(count($tripParticipants));
+        }
+        dd($user);
+
+        return $this->redirectToRoute('main_home');
     }
 }
