@@ -165,6 +165,26 @@ class TripRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
+    public function findATripForRegister($id)
+    {
+        $queryBuilder = $this->createQueryBuilder('t');
+
+        $queryBuilder->andWhere('t.id = :id');
+        $queryBuilder->setParameter('id', $id);
+
+        //On ajoute des jointures pour éviter les multiples requêtes par Doctrine
+        $queryBuilder->join('t.state', 's');
+        $queryBuilder->addSelect('s');
+
+        $queryBuilder->join('t.participants', 'p');
+        $queryBuilder->addSelect('p');
+
+        $query = $queryBuilder->getQuery();
+        $result = $query->getOneOrNullResult();
+
+        return $result;
+    }
+
     // /**
     //  * @return Trip[] Returns an array of Trip objects
     //  */
