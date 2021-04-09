@@ -55,8 +55,10 @@ class MainController extends AbstractController
             $filterParams = null;
         }
 
+        //Appel à la bdd
         $results = $tripRepository->findTripsFiltered($filterParams, $user, $page, $maxResults);
 
+        //Liste des Sorties
         $trips = $results['trips'];
 
         //Pagination
