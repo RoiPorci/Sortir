@@ -71,13 +71,6 @@ class TripController extends AbstractController
             $tripIsOpened = true;
         }
 
-        if ($tripDateLimitForRegistration <= $now){
-            $this->addFlash('danger', 'Désolé, la date limite d\'inscription est dépassée');
-            $registrationDateIsValid = false;
-        } else {
-            $registrationDateIsValid = true;
-        }
-
         if (count($tripParticipants) >= $tripMaxRegistrationNumber){
             $this->addFlash('danger', 'Désolé, la sortie est déjà complète');
             $tripIsFull = true;
@@ -85,13 +78,15 @@ class TripController extends AbstractController
             $tripIsFull = false;
         }
 
-        if ( !$userIsRegisteredForTrip AND $tripIsOpened AND $registrationDateIsValid AND !$tripIsFull)
+        if ( !$userIsRegisteredForTrip AND $tripIsOpened AND !$tripIsFull)
         {
             $tripForRegistration->addParticipant($user);
             $entityManager->persist($tripForRegistration);
             $entityManager->flush();
             $this->addFlash('success', 'Vous êtes inscrit! ');
         }
+
+        //TODO clôturer la sortie si nb max atteint
 
         return $this->redirectToRoute('main_home');
     }
