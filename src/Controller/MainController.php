@@ -28,7 +28,7 @@ class MainController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function home(int $page = 1 , TripRepository $tripRepository, Request $request): Response
+    public function home(int $page = 1, TripRepository $tripRepository, Request $request): Response
     {
         /** @var User */
         $user = $this->getUser();
