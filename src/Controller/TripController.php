@@ -43,7 +43,7 @@ class TripController extends AbstractController
     /**
      * @Route("/register/trip/{id}", name="trip_registerForATrip")
      */
-    public function registerForATrip($id, TripRepository $tripRepository): Response
+    public function registerForATrip($id, TripRepository $tripRepository, EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
 
@@ -52,18 +52,46 @@ class TripController extends AbstractController
         $tripState = $tripForRegistration->getState()->getWording();
         $tripDateLimitForRegistration = $tripForRegistration->getDateLimitForRegistration();
         $tripMaxRegistrationNumber = $tripForRegistration->getMaxRegistrationNumber();
-        $tripParticipants = $tripForRegistration->getParticipants();
+        $tripParticipants = $tripForRegistration->getParticipants()->toArray();
         $now = new \DateTime();
-        dd($tripParticipants);
 
-        if ($tripState === self::OUVERTE
-            AND $tripDateLimitForRegistration >= $now
-            AND count($tripParticipants) < $tripMaxRegistrationNumber
-            AND in_array($user, $tripParticipants))
+        if (in_array($user, $tripParticipants))
         {
-            dd(count($tripParticipants));
+            $this->addFlash('danger', 'Vous êtes déjà inscrit!');
+            $userIsRegisteredForTrip = true;
+        } else {
+            $userIsRegisteredForTrip = false;
         }
-        dd($user);
+
+        if (!$tripState === self::OUVERTE)
+        {
+            $this->addFlash('danger', 'Désolé, l\'inscription n\'est pas encore ouverte');
+            $tripIsOpened = false;
+        } else {
+            $tripIsOpened = true;
+        }
+
+        if ($tripDateLimitForRegistration <= $now){
+            $this->addFlash('danger', 'Désolé, la date limite d\'inscription est dépassée');
+            $registrationDateIsValid = false;
+        } else {
+            $registrationDateIsValid = true;
+        }
+
+        if (count($tripParticipants) >= $tripMaxRegistrationNumber){
+            $this->addFlash('danger', 'Désolé, la sortie est déjà complète');
+            $tripIsFull = true;
+        } else {
+            $tripIsFull = false;
+        }
+
+        if ( !$userIsRegisteredForTrip AND $tripIsOpened AND $registrationDateIsValid AND !$tripIsFull)
+        {
+            $tripForRegistration->addParticipant($user);
+            $entityManager->persist($tripForRegistration);
+            $entityManager->flush();
+            $this->addFlash('success', 'Vous êtes inscrit! ');
+        }
 
         return $this->redirectToRoute('main_home');
     }
