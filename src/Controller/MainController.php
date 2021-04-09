@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\ListTripType;
 
 use App\Repository\TripRepository;
+use App\Services\Updater;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,6 +14,14 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MainController extends AbstractController
 {
+    /** @var Updater */
+    private Updater $updater;
+
+    public function __construct(Updater $updater)
+    {
+        $this->updater = $updater;
+    }
+
     /**
      * @Route("/{page}", name="main_home", requirements={"page": "\d+"})
      * @param TripRepository $tripRepository
@@ -24,9 +33,10 @@ class MainController extends AbstractController
         /** @var User */
         $user = $this->getUser();
 
-        $maxTrips = 20;
+        //On met à jour les états des Sorties
+        $this->updater->updateTripsState();
 
-        $filter = $this->createForm(ListTripType::class, null, ['attr' => ['id' => 'filter_form']]);
+        $filter = $this->createForm(ListTripType::class);
 
         $filter->handleRequest($request);
 
@@ -48,18 +58,11 @@ class MainController extends AbstractController
             $filterParameters = null;
         }
 
-        $results = $tripRepository->findTripsFiltered($filterParameters, $user, $page, $maxTrips);
-
-        $trips = $results['trips'];
-        $totalTrips = $results['nbTrips'];
-        $totalPages = ceil($totalTrips/$maxTrips);
+        $trips = $tripRepository->findTripsFiltered($filterParameters, $user);
 
         return $this->render('main/home.html.twig', [
             'filterForm' => $filter->createView(),
             'trips' => $trips,
-            'currentPage' => $page,
-            'totalTrips' => $totalTrips,
-            'totalPages' => $totalPages,
         ]);
     }
 

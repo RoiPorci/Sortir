@@ -26,13 +26,8 @@ class TripRepository extends ServiceEntityRepository
     /**
      * @param array|null $filter
      * @param User $user
-     * @param int $page
-     * @param int $maxResults
-     * @return array
-     * @throws NoResultException
-     * @throws NonUniqueResultException
      */
-    public function findTripsFiltered(?array $filter, User $user, int $page = 1, int $maxResults): array
+    public function findTripsFiltered(?array $filter, User $user)
     {
         $queryBuilder = $this->createQueryBuilder('t');
 
@@ -82,20 +77,21 @@ class TripRepository extends ServiceEntityRepository
             }
             $queryBuilder->setParameter(':now', new \DateTime());
         }
+        else
+        {
+            /*$queryBuilder->andWhere('t.dateTimeStart > :now');
+            $queryBuilder->setParameter(':now', new \DateTime());*/
+        }
 
-        //On récupère le nombre de Sorties filtrées
-        $queryBuilder->select('COUNT(t)');
-        $countQuery = $queryBuilder->getQuery();
-        $nbTrips = $countQuery->getSingleScalarResult();
+        $now = new \DateTime();
+        $oneMonthBeforeNow = $now->sub(\DateInterval::createFromDateString('1 month'));
+
+        $queryBuilder->andWhere('t.dateTimeStart > :dateArchived');
+        $queryBuilder->setParameter(':dateArchived', $oneMonthBeforeNow);
+
 
         //Mise en forme des résultats :
         $queryBuilder->addOrderBy('t.dateTimeStart', 'DESC');
-
-        //On met en place la pagination
-        $offset = ($page - 1) * $maxResults;
-
-        $queryBuilder->setMaxResults($maxResults);
-        $queryBuilder->setFirstResult($offset);
 
         //On effectue la requête pour récupérer la liste des Sorties
         $queryBuilder->select('t');
@@ -117,12 +113,14 @@ class TripRepository extends ServiceEntityRepository
         $query = $queryBuilder->getQuery();
         $trips = new Paginator($query);
 
-        return [
-            'nbTrips' => $nbTrips,
-            'trips' => $trips
-        ];
+        return $trips;
     }
 
+    /**
+     * @param $id
+     * @return int|mixed|string|null
+     * @throws NonUniqueResultException
+     */
     public function findATrip($id)
     {
         $queryBuilder = $this->createQueryBuilder('t');
@@ -130,6 +128,7 @@ class TripRepository extends ServiceEntityRepository
         $queryBuilder->andWhere('t.id = :id');
         $queryBuilder->setParameter('id', $id);
 
+        //On ajoute des jointures pour éviter les multiples requêtes par Doctrine
         $queryBuilder->join('t.organiserCampus', 'c');
         $queryBuilder->addSelect('c');
 
@@ -149,6 +148,21 @@ class TripRepository extends ServiceEntityRepository
         $result = $query->getOneOrNullResult();
 
         return $result;
+    }
+
+    public function findAllNotArchived()
+    {
+        $queryBuilder = $this->createQueryBuilder('t');
+
+        $now = new \DateTime();
+        $oneMonthBeforeNow = $now->sub(\DateInterval::createFromDateString('1 month'));
+
+        $queryBuilder->andWhere('t.dateTimeStart > :dateArchived');
+        $queryBuilder->setParameter(':dateArchived', $oneMonthBeforeNow);
+
+        $query = $queryBuilder->getQuery();
+
+        return $query->getResult();
     }
 
     // /**
