@@ -123,6 +123,34 @@ class TripRepository extends ServiceEntityRepository
         ];
     }
 
+    public function findATrip($id)
+    {
+        $queryBuilder = $this->createQueryBuilder('t');
+
+        $queryBuilder->andWhere('t.id = :id');
+        $queryBuilder->setParameter('id', $id);
+
+        $queryBuilder->join('t.organiserCampus', 'c');
+        $queryBuilder->addSelect('c');
+
+        $queryBuilder->join('t.location', 'l');
+        $queryBuilder->addSelect('l');
+
+        $queryBuilder->join('t.organiser', 'o');
+        $queryBuilder->addSelect('o');
+
+        $queryBuilder->join('t.participants', 'p');
+        $queryBuilder->addSelect('p');
+
+        $queryBuilder->join('l.city', 'lc');
+        $queryBuilder->addSelect('lc');
+
+        $query = $queryBuilder->getQuery();
+        $result = $query->getOneOrNullResult();
+
+        return $result;
+    }
+
     // /**
     //  * @return Trip[] Returns an array of Trip objects
     //  */
