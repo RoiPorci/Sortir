@@ -37,29 +37,25 @@ class MainController extends AbstractController
         //On met à jour les états des Sorties
         $this->updater->updateTripsState();
 
-        $filter = $this->createForm(ListTripType::class);
+        $filter = $this->createForm(ListTripType::class, null, [
+            'action' => $this->generateUrl('main_home'),
+            'method' => 'GET'
+        ]);
 
         $filter->handleRequest($request);
 
-        if($filter->isSubmitted() && $filter->isValid()){
+        $routeParams = $request->query->all();
 
-            $filterParameters = [
-            'campus' => $filter->get('campus')->getData(),
-            'name' => $filter->get('name')->getData(),
-            'dateStart' => $filter->get('dateStart')->getData(),
-            'dateEnd' => $filter->get('dateEnd')->getData(),
-            'isOrganiser' => $filter->get('isOrganiser')->getData(),
-            'isParticipant' => $filter->get('isParticipant')->getData(),
-            'isNotParticipant' => $filter->get('isNotParticipant')->getData(),
-            'past' => $filter->get('past')->getData()
-            ];
-
+        //On récupère les données du filtre
+        if (array_key_exists('list_trip', $routeParams)){
+            $filterParams = $routeParams['list_trip'];
         }
-        else {
-            $filterParameters = null;
+        else
+        {
+            $filterParams = null;
         }
 
-        $results = $tripRepository->findTripsFiltered($filterParameters, $user, $page, $maxResults);
+        $results = $tripRepository->findTripsFiltered($filterParams, $user, $page, $maxResults);
 
         $trips = $results['trips'];
 
