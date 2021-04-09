@@ -32,6 +32,7 @@ class MainController extends AbstractController
     {
         /** @var User */
         $user = $this->getUser();
+        $maxResults = 10;
 
         //On met à jour les états des Sorties
         $this->updater->updateTripsState();
@@ -58,11 +59,20 @@ class MainController extends AbstractController
             $filterParameters = null;
         }
 
-        $trips = $tripRepository->findTripsFiltered($filterParameters, $user);
+        $results = $tripRepository->findTripsFiltered($filterParameters, $user, $page, $maxResults);
+
+        $trips = $results['trips'];
+
+        //Pagination
+        $totalTrips = $results['totalTrips'];
+        $totalPages = ceil($totalTrips/$maxResults);
 
         return $this->render('main/home.html.twig', [
             'filterForm' => $filter->createView(),
             'trips' => $trips,
+            'currentPage' => $page,
+            'totalTrips' => $totalTrips,
+            'totalPages' => $totalPages,
         ]);
     }
 

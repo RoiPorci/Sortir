@@ -27,7 +27,7 @@ class TripRepository extends ServiceEntityRepository
      * @param array|null $filter
      * @param User $user
      */
-    public function findTripsFiltered(?array $filter, User $user)
+    public function findTripsFiltered(?array $filter, User $user, $page = 1, $maxResults)
     {
         $queryBuilder = $this->createQueryBuilder('t');
 
@@ -79,8 +79,109 @@ class TripRepository extends ServiceEntityRepository
         }
         else
         {
-            /*$queryBuilder->andWhere('t.dateTimeStart > :now');
-            $queryBuilder->setParameter(':now', new \DateTime());*/
+            $queryBuilder->andWhere('t.dateTimeStart > :now');
+            $queryBuilder->setParameter(':now', new \DateTime());
+        }
+
+        $now = new \DateTime();
+        $oneMonthBeforeNow = $now->sub(\DateInterval::createFromDateString('1 month'));
+
+        $queryBuilder->andWhere('t.dateTimeStart > :dateArchived');
+        $queryBuilder->setParameter(':dateArchived', $oneMonthBeforeNow);
+
+        //Mise en place de la pagination :
+        $queryBuilder->select('COUNT(t)');
+        $countQuery = $queryBuilder->getQuery();
+        $totalTrips = $countQuery->getSingleScalarResult();
+
+        //Mise en forme des résultats :
+        $queryBuilder->addOrderBy('t.dateTimeStart', 'DESC');
+
+        //Mise en place de la pagination :
+        $offset = ($page - 1) * $maxResults;
+        $queryBuilder->setMaxResults($maxResults);
+        $queryBuilder->setFirstResult($offset);
+
+        //On effectue la requête pour récupérer la liste des Sorties
+        $queryBuilder->select('t');
+
+        //On ajoute des jointures pour éviter les multiples requêtes par Doctrine
+        $queryBuilder->join('t.organiser', 'o');
+        $queryBuilder->addSelect('o');
+
+        $queryBuilder->join('t.state', 's');
+        $queryBuilder->addSelect('s');
+
+        $queryBuilder->join('t.participants', 'p');
+        $queryBuilder->addSelect('p');
+
+        $queryBuilder->join('t.organiserCampus', 'c');
+        $queryBuilder->addSelect('c');
+
+        //Récupération des Sorties filtrées
+        $query = $queryBuilder->getQuery();
+        $trips = new Paginator($query);
+
+        return [
+            'totalTrips' => $totalTrips,
+            'trips' => $trips
+        ];
+    }
+
+    public function getQueryTripsFiltered(?array $filter, User $user)
+    {
+        $queryBuilder = $this->createQueryBuilder('t');
+
+        //Application du filtre
+        if($filter){
+            if($filter['campus']){
+                $queryBuilder->andWhere('t.organiserCampus = :campus');
+                $queryBuilder->setParameter(':campus', $filter['campus']);
+            }
+
+            if($filter['name']){
+                $queryBuilder->andWhere('t.name LIKE :name');
+                $queryBuilder->setParameter('name', '%'.$filter['name'].'%');
+            }
+
+            if ($filter['dateStart']){
+                $queryBuilder->andWhere('t.dateTimeStart >= :dateStart');
+                $queryBuilder->setParameter(':dateStart', $filter['dateStart']);
+            }
+
+            if ($filter['dateEnd']){
+                $queryBuilder->andWhere('t.dateTimeStart <= :dateEnd');
+                $queryBuilder->setParameter(':dateEnd', $filter['dateEnd']);
+            }
+
+            if($filter['isOrganiser']){
+                $queryBuilder->andWhere('t.organiser = :user');
+                $queryBuilder->setParameter(':user', $user);
+            }
+
+            if($filter['isParticipant']){
+                $queryBuilder->andWhere(':user MEMBER OF t.participants');
+                $queryBuilder->setParameter(':user', $user);
+            }
+
+            if($filter['isNotParticipant']){
+                $queryBuilder->andWhere(':user NOT MEMBER OF t.participants');
+                $queryBuilder->setParameter(':user', $user);
+            }
+
+            if($filter['past']){
+                $queryBuilder->andWhere('t.dateTimeStart < :now');
+            }
+            else {
+                $queryBuilder->andWhere('t.dateTimeStart > :now');
+
+            }
+            $queryBuilder->setParameter(':now', new \DateTime());
+        }
+        else
+        {
+            $queryBuilder->andWhere('t.dateTimeStart > :now');
+            $queryBuilder->setParameter(':now', new \DateTime());
         }
 
         $now = new \DateTime();
@@ -109,11 +210,7 @@ class TripRepository extends ServiceEntityRepository
         $queryBuilder->join('t.organiserCampus', 'c');
         $queryBuilder->addSelect('c');
 
-        //Récupération des Sorties filtrées
-        $query = $queryBuilder->getQuery();
-        $trips = new Paginator($query);
-
-        return $trips;
+        return $queryBuilder->getQuery();;
     }
 
     /**

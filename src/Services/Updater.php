@@ -19,7 +19,7 @@ class Updater
     /** @var EntityManagerInterface */
     private EntityManagerInterface $entityManager;
 
-
+    private array $states;
 
     public function __construct(
         TripRepository $tripRepository,
@@ -30,10 +30,31 @@ class Updater
         $this->stateRepository = $stateRepository;
         $this->entityManager = $entityManager;
 
-        $this->states['past'] = $this->stateRepository->findBy(['wording' => 'Passée'])[0];
-        $this->states['completed'] = $this->stateRepository->findBy(['wording' => 'Clôturée'])[0];
-        $this->states['ongoing'] = $this->stateRepository->findBy(['wording' => 'Activité en cours'])[0];
-        $this->states['opened'] = $this->stateRepository->findBy(['wording' => 'Ouverte'])[0];
+        $this->initializeStates();
+    }
+
+    private function initializeStates(){
+        $statesDb = $this->stateRepository->findAll();
+
+        foreach ($statesDb as $stateDb){
+            switch ($stateDb->getWording()){
+                case 'Passée':
+                    $index = 'past';
+                    break;
+                case 'Clôturée':
+                    $index = 'completed';
+                    break;
+                case 'Activité en cours':
+                    $index = 'ongoing';
+                    break;
+                case 'Ouverte':
+                    $index = 'opened';
+                    break;
+                default:
+                    $index = '';
+            }
+            $this->states[$index] = $stateDb;
+        }
     }
 
     public function updateTripsState()
@@ -62,17 +83,12 @@ class Updater
         if ($trip->getDateTimeStart() < $now) {
             $trip->setState($this->states['past']);
         }
-        elseif ($trip->getDateTimeStart()->add(\DateInterval::createFromDateString($trip->getDuration().' minutes')) < $now){
+        elseif ($trip->getDateTimeStart()->modify('+'.$trip->getDuration().' minutes') < $now){
             $trip->setState($this->states['ongoing']);
         }
         elseif ($trip->getDateLimitForRegistration() < $now){
             $trip->setState($this->states['completed']);
         }
-        //A décommenter si mauvaises maj sur les Sorties ouvertes
-       /* else
-        {
-            $trip->setState($this->states['opened']);
-        }*/
 
         return $trip;
     }
