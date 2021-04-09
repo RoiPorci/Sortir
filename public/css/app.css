@@ -1,6 +1,26 @@
 body{
     font-family: 'Ubuntu', sans-serif;
 }
+/* Scrollbar */
+
+/* --- Sous Chrome --- */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track  {
+    background-color: #18181e;
+}
+::-webkit-scrollbar-thumb, ::-webkit-scrollbar-button {
+    background-color: #1ED8FF;
+}
+
+/* --- Sous Firefox --- */
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #1ED8FF #18181e;
+}
 
 
 a{
@@ -101,4 +121,28 @@ a{
 #participants-list-head{
     background-color: #212529;
     color: white;
+}
+
+/* Home */
+
+.home-trip-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    border-bottom: 1px solid #fff;
+    height: 25px;
+}
+
+.home-trip-title > h5 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+}
+
+.home-trip-subtitle {
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px;
+    color: #AAAAAA;
+}
+
+home-trip-title > span:last-child, .home-wording {
+    text-align: right;
 }

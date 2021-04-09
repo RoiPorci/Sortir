@@ -14,7 +14,7 @@
         </div>
 
         <div class="container-fluid bg-light m-0">
-            <div class="container my-2">
+            <div class="container my-4 bg-light">
                 <h3 class="mb-3">Filtrer les sorties</h3>
 
                 {{ form_start(filterForm) }}
@@ -100,10 +100,9 @@
             </div>
         </div>
 
-        <div class="container my-2">
-            <ul class="container-fluid list-group-flush">
+        <div class="container my-5">
             {% for trip in trips %}
-                <li class="d-flex list-group-item my-2">
+                <!--<li class="d-flex list-group-item my-2">
                     <div>{{ trip.name }}</div>
                     <div>{{ trip.dateTimeStart|date('d/m/Y H:i') }}</div>
                     <div>{{ trip.dateLimitForRegistration|date('d/m/Y') }}</div>
@@ -112,13 +111,38 @@
                     <div></div>
                     <div>{{ trip.organiser.username }}</div>
                     <div><a href="{{ path('trip_getDetail', {id:trip.id}) }}">Afficher</a></div>
-                </li>
+                </li>-->
+
+                <section class="home-trip card container-fluid bg-dark text-white my-3">
+                    <article class="card-body">
+                        <div class="home-trip-title card-title d-flex justify-content-between">
+                            <h5 class="col-7 text-left">{{ trip.name }}</h5>
+                            <span class="col-2 text-center"> à partir du {{ trip.dateTimeStart|date('d/m/Y') }} à {{ trip.dateTimeStart | date('H:i') }}</span>
+                            <span class="col-2 text-right home-wording">Etat : {{ trip.state.wording }}</span>
+                        </div>
+                        <div class="card-subtitle home-trip-subtitle mb-2 d-flex justify-content-between">
+                            <span class="col-7 text-left">Organisateur : {{ trip.organiser.username }}</span>
+                            <span class="col-2 text-center">Places disponibles {{ trip.participants|length }}/{{ trip.maxRegistrationNumber }}</span>
+                            <span class="col-2 text-right home-wording">Fin d'inscription le {{ trip.dateLimitForRegistration|date('d/m/Y') }}</span>
+                        </div>
+                        <p class="card-text">{{ trip.details }}</p>
+                        <div class="d-flex justify-content-between">
+
+                            <div>
+                                <a href="{{ path('trip_getDetail', {id:trip.id}) }}" class="btn btn-blue-light"><i class="fas fa-eye"></i> Afficher</a>
+                                <a href="#" class="btn btn-blue-light"><i class="fas fa-upload"></i> Publier</a>
+                                <a href="#" class="btn btn-blue-light"><i class="fas fa-pen"></i> Modifier</a>
+                            </div>
+                            <div>
+                                <a href="{{ path('trip_getDetail', {id:trip.id}) }}" class="btn btn-blue-light"><i class="fas fa-door-open"></i> S'inscrire</a>
+                                <a href="{{ path('trip_getDetail', {id:trip.id}) }}" class="btn btn-blue-light"><i class="fas fa-sign-out-alt"></i> Se désister</a>
+                            </div>
+                        </div>
+                    </article>
+                </section>
             {% else %}
-
-                <div class=>Aucun résultat ne correspond à votre recherche!</div>
-
+                <div class="text-center">Aucun résultat ne correspond à votre recherche!</div>
             {% endfor %}
-            </ul>
         </div>
     </div>
 {% endblock %}
