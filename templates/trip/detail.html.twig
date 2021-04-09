@@ -108,7 +108,17 @@
             </div>
 
             <div class="col-sm-12 col-md-4 mt-5">
-                <h4 class="mb-2 pt-5">Liste des participants</h4>
+                <h5 class="mb-2 pt-3">Organisateur</h5>
+                <li class="list-group-item d-flex">
+                    <div class="col-6">
+                        {{ tripDetail.organiser.username }}
+                    </div>
+                    <div class="col-6">
+                        {{ tripDetail.organiser.firstName }} {{ tripDetail.organiser.lastName }}
+                    </div>
+                </li>
+
+                <h5 class="mb-2 pt-5">Liste des participants</h5>
 
                 <ul class="list-group">
                     <li class="list-group-item d-flex" id="participants-list-head">
