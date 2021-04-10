@@ -20,18 +20,21 @@
                     <div class="form-group">
                         <span>Campus :</span><span>{{ app.user.campus.name }}</span>
                     </div>
+                    {{ form_row(tripForm.city) }}
                     <div class="form-group">
                         <label for="location">Lieu :</label>
-                        <select class="col-8" name="location" id="location">
+                        <select class="form-select form-control" name="location" id="location">
                             <option value=""></option>
                         </select>
+                        <button id="location-plus" class="mx-2 btn btn-blue-light"><i class="fas fa-plus"></i></button>
                     </div>
                 </div>
             </aside>
 
             <div class="mt-5 d-flex justify-content-between">
-                <button class="btn btn-blue-light col-5 mr-5">Sauvegarder</button>
-                <a class="btn-success btn col-5 ml-5" href="{{ path('main_home') }}">Annuler</a>
+                <button class="btn btn-blue-light col-4 mr-5">Enregistrer</button>
+                <button class="btn btn-blue-light col-4 mr-5">Publier la sortie</button>
+                <a class="btn btn-blue-light-retour col-3 ml-5" href="{{ path('main_home') }}">Annuler</a>
             </div>
             {{ form_end(tripForm) }}
         </article>

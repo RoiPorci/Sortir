@@ -10,14 +10,19 @@
     <div class="container-fluid m-0 p-0 min-vh-100">
         <div class="container-fluid bg-dark m-0">
             <div class="container">
-                <div class="row justify-content-end text-end text-blue-light mx-2">
-                        <p class=""><i class="bi bi-calendar-event"></i> {{ "now"|date("d/m/Y") }}</p>
-                        <p class=""><i class="fas fa-user-circle"></i> {{ app.user.username }}</p>
+                <div class="d-flex justify-content-between text-end text-blue-light mx-2 align-items-center">
+                    <div>
+                        <a class="btn btn-blue-light-sortie" href="{{ path('trip_create') }}"><i class="fas fa-calendar-plus"></i> Créer une sortie</a>
+                    </div>
+                    <div >
+                        <p><i class="bi bi-calendar-event"></i> {{ "now"|date("d/m/Y") }}</p>
+                        <p><i class="fas fa-user-circle"></i> {{ app.user.username }}</p>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="container-fluid bg-light m-0">
+        <div id="sortir-filtre" class="container-fluid bg-light m-0">
             <div class="container my-4 bg-light">
                 <h3 class="mb-3">Filtrer les sorties</h3>
 
@@ -106,17 +111,6 @@
 
         <div class="container my-5">
             {% for trip in trips %}
-                <!--<li class="d-flex list-group-item my-2">
-                    <div>{{ trip.name }}</div>
-                    <div>{{ trip.dateTimeStart|date('d/m/Y H:i') }}</div>
-                    <div>{{ trip.dateLimitForRegistration|date('d/m/Y') }}</div>
-                    <div>{{ trip.participants|length }}/{{ trip.maxRegistrationNumber }}</div>
-                    <div>{{ trip.state.wording }}</div>
-                    <div></div>
-                    <div>{{ trip.organiser.username }}</div>
-                    <div><a href="{{ path('trip_getDetail', {id:trip.id}) }}">Afficher</a></div>
-                </li>-->
-
                 <section class="home-trip card container-fluid bg-dark text-white my-3">
                     <article class="card-body">
                         <div class="home-trip-title card-title d-flex justify-content-between">
@@ -133,19 +127,19 @@
                         <div class="d-flex justify-content-between">
 
                             <div>
-                                <a href="{{ path('trip_getDetail', {id:trip.id}) }}" class="btn btn-blue-light"><i class="fas fa-eye"></i> Afficher</a>
+                                <a href="{{ path('trip_getDetail', {id:trip.id}) }}" class="btn btn-blue-light-nav"><i class="fas fa-eye"></i> Afficher</a>
                                 {% if app.user == trip.organiser %}
                                     {% if trip.state.wording == 'Créée' %}
-                                        <a href="#" class="btn btn-blue-light"><i class="fas fa-upload"></i> Publier</a>
+                                        <a href="#" class="btn btn-blue-light-nav"><i class="fas fa-upload"></i> Publier</a>
                                     {% endif %}
-                                    <a href="#" class="btn btn-blue-light"><i class="fas fa-pen"></i> Modifier</a>
+                                    <a href="#" class="btn btn-blue-light-nav"><i class="fas fa-pen"></i> Modifier</a>
                                 {% endif %}
                             </div>
                             <div>
                                 {% if app.user not in trip.participants %}
-                                    <a href="{{ path('trip_registerForATrip', {id:trip.id}) }}" class="btn btn-blue-light"><i class="fas fa-door-open"></i> S'inscrire</a>
+                                    <a href="{{ path('trip_registerForATrip', {id:trip.id}) }}" class="btn btn-blue-light-nav"><i class="fas fa-door-open"></i> S'inscrire</a>
                                 {% else %}
-                                    <a href="{{ path('trip_getDetail', {id:trip.id}) }}" class="btn btn-blue-light"><i class="fas fa-sign-out-alt"></i> Se désister</a>
+                                    <a href="{{ path('trip_getDetail', {id:trip.id}) }}" class="btn btn-blue-light-nav"><i class="fas fa-sign-out-alt"></i> Se désister</a>
                                 {% endif %}
                             </div>
                         </div>

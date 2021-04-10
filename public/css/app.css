@@ -1,13 +1,32 @@
-body{
-    font-family: 'Ubuntu', sans-serif;
-    min-height: 100vh;
+body, form{
+    font-family: 'Oswald', sans-serif;
+    letter-spacing: 1px;
 }
-/* Scrollbar */
+
+a{
+    text-decoration: none;
+}
+
+.message-flash {
+    height: 56px;
+    border-radius: 0px;
+}
+
+.custom-file {
+    width: 100%;
+}
+
+h1, h2, h3, h4, h6, h5, .nav-item, .btn {
+    font-family: 'Montserrat', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+}
+
+/* ------------------------------------ Scrollbar ------------------------------------ */
 
 /* --- Sous Chrome --- */
 ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 5px;
 }
 ::-webkit-scrollbar-track  {
     background-color: #18181e;
@@ -24,11 +43,8 @@ body{
 }
 
 
-a{
-    text-decoration: none;
-}
+/* ------------------------------------ Link ------------------------------------ */
 
-/* Link */
 .link-blue-light{
     color: white;
     transition: all 0.5s;
@@ -42,29 +58,45 @@ a{
     color: #1ED8FF;
 }
 
-/* Buttons */
-.btn-blue-light, #user button, .btn-blue-light-nav {
+/* ------------------------------------ Buttons ------------------------------------ */
+
+.btn {
+    font-size: 13px;
+}
+
+.btn-blue-light, #user button, .btn-blue-light-nav, .btn-blue-light-sortie:hover, .btn-blue-light-retour:hover {
     background: #1ED8FF;
     color: #fff;
     transition: all 0.5s;
 }
 
-.btn-blue-light-nav:hover {
+.btn-blue-light-nav:hover, .btn-blue-light-sortie {
     background: #fff;
     transition: all 0.5s;
     color: #212529;
 }
 
-.btn-blue-light:hover, #user button:hover {
+.btn-blue-light:hover, #user button:hover, .btn-blue-light-retour {
     background: #212529;
     transition: all 0.5s;
     color: #fff;
 }
+/* ------------------------------------ NAV ------------------------------------ */
 
-/* Form Profil - Form Trip */
+.nav-item a {
+    font-size: 13px;
+    letter-spacing: 1.2px;
+}
+
+/* ------------------------------------ Form Profil - Form Trip ------------------------------------ */
+
 
 #formProfil {
     margin-left: 30px;
+}
+
+#location-plus {
+    border-radius: 50%;
 }
 
 #user > .form-group, #formTrip .form-group {
@@ -101,8 +133,12 @@ a{
     scrollbar-color: #1ED8FF;
 }
 
+select[id='trip_city'] {
+    width: 120%;
+}
 
-/*list*/
+
+/* ------------------------------------ list ------------------------------------ */
 
 .participants-list{
     height: 200px;
@@ -124,26 +160,71 @@ a{
     color: white;
 }
 
-/* Home */
+/* ------------------------------------ Home ------------------------------------ */
+
 
 .home-trip-title {
-    font-family: 'Oswald', sans-serif;
     font-size: 13px;
     border-bottom: 1px solid #fff;
     height: 25px;
 }
 
 .home-trip-title > h5 {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 18px;
+    font-size: 16px;
 }
 
 .home-trip-subtitle {
-    font-family: 'Oswald', sans-serif;
     font-size: 12px;
     color: #AAAAAA;
 }
 
 home-trip-title > span:last-child, .home-wording {
     text-align: right;
+}
+
+.input-group-text {
+    background: #23D9FF;
+    border: none;
+    color: #fff;
+}
+
+.card-body p {
+    font-size: 15px;
+}
+
+.pagination {
+    justify-content: center;
+}
+
+.pagination > .page-item > .page-link {
+    background: #212529;
+    color: #1ED8FF;
+    border-color: #fff;
+    transition: all 0.5s;
+}
+
+.pagination > .page-item > .page-link:hover {
+    background: #1ED8FF;
+    color: #212529;
+    transition: all 0.5s;
+}
+
+/* ------------------------------------ Sortie ------------------------------------ */
+
+#table-head-participants {
+    border-radius: 5px 5px 0px 0px;
+}
+
+#table-participants {
+    border-radius: 0px 0px 5px 5px;
+}
+
+/* ------------------------------------ Profil ------------------------------------ */
+
+#no-profil {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 80%;
 }

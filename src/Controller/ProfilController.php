@@ -64,7 +64,7 @@ class ProfilController extends AbstractController
 
             $this->addFlash('success', 'Profil modifié ! ');
 
-            return $this->redirectToRoute('profil_updatedProfil');
+            return $this->redirectToRoute('profil_show', ['id' => $user->getId()]);
         }
 
         return $this->render('profil/updateProfil.html.twig', [

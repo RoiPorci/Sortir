@@ -46,6 +46,16 @@ class TripType extends AbstractType
                 'label'=> "Description et infos :",
                 'required' => false
             ])
+            ->add('city', EntityType::class, [
+                'label' => 'Ville :',
+                'mapped' => false,
+                'choice_label' => 'name',
+                'class' => City::class,
+                'attr' => [
+                    "class" => "form-select"
+                ]
+
+            ])
 
         ;
     }

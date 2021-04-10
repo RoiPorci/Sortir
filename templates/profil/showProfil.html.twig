@@ -3,7 +3,7 @@
 {% block title %}{{ parent() }}Profil{% endblock %}
 
 {% block body %}
-    <section class="container-fluid my-5">
+    <section class="container-fluid my-5 min-vh-100">
         {% if user %}
         <h1 class="text-center mb-5 mt-5">{{ user.username }}</h1>
         <div class="d-flex justify-content-center align-items-center">
@@ -39,9 +39,9 @@
             </article>
         </div>
         {% else %}
-            <article class="text-center col-12 min-vh-100">
-                <div class="my-5">Pas de profil !</div>
-                <a class="btn btn-blue-light col-8" href="{{ path('profil_show', {id:app.user.id}) }}">Retour</a>
+            <article id="no-profil" class="text-center col-12">
+                <div class="my-5">Il n'y a pas de profil par ici !</div>
+                <a class="btn btn-blue-light col-5" href="{{ path('main_home') }}">Retour à la page d'accueil</a>
             </article>
         {% endif %}
     </section>
