@@ -6,6 +6,7 @@ use App\Repository\TripRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=TripRepository::class)
@@ -20,31 +21,83 @@ class Trip
     private $id;
 
     /**
+     * @Assert\NotBlank(
+     *     message="Veuillez renseigner un nom!"
+     * )
+     * @Assert\Length(
+     *     min=3,
+     *     max=250,
+     *     minMessage="{{ limit }} caractères minimum svp!",
+     *     maxMessage="{{ limit }} caractères maximum svp!"
+     * )
      * @ORM\Column(type="string", length=250)
      */
     private $name;
 
     /**
+     * @Assert\NotBlank(
+     *     message="Veuillez renseigner une date et heure de la sortie!"
+     * )
+     * @Assert\GreaterThan(
+     *     value="today",
+     *     message="La date de la sortie doit être ultérieure à aujourd'hui!"
+     * )
      * @ORM\Column(type="datetime")
      */
     private $dateTimeStart;
 
     /**
+     * @Assert\NotBlank(
+     *     message="Veuillez renseigner une durée!"
+     * )
+     * @Assert\Positive(
+     *     message="La durée doit être positive!"
+     * )
      * @ORM\Column(type="integer")
      */
     private $duration;
 
     /**
+     * @Assert\NotBlank(
+     *     message="Veuillez renseigner une date limite d'inscription!"
+     * )
+     * @Assert\LessThan(
+     *     propertyPath="dateTimeStart",
+     *     message="La date limite d'inscription doit être antérieure à la date de la sortie"
+     * )
+     * @Assert\GreaterThan(
+     *     value="today",
+     *     message="La date limite d'inscription doit être ultérieure à aujourd'hui!"
+     * )
      * @ORM\Column(type="datetime")
      */
     private $dateLimitForRegistration;
 
     /**
+     * @Assert\NotBlank(
+     *     message="Veuillez renseigner un nombre de places!"
+     * )
+     * @Assert\Positive(
+     *     message="Le nombre de places doit être positif!"
+     * )
+     * @Assert\GreaterThan(
+     *     value="1",
+     *     message="Le nombre de places doit être supérieur à 1!"
+     * )
      * @ORM\Column(type="integer")
      */
     private $maxRegistrationNumber;
 
     /**
+     * @Assert\NotBlank(
+     *     message="Veuillez renseigner une description!"
+     * )
+     * @Assert\Length(
+     *     min=3,
+     *     max=250,
+     *     minMessage="{{ limit }} caractères minimum svp!",
+     *     maxMessage="{{ limit }} caractères maximum svp!"
+     * )
      * @ORM\Column(type="text")
      */
     private $details;
@@ -73,6 +126,9 @@ class Trip
     private $organiser;
 
     /**
+     * @Assert\NotBlank(
+     *     message="Veuillez renseigner un lieu!"
+     * )
      * @ORM\ManyToOne(targetEntity=Location::class, inversedBy="trips")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -105,7 +161,7 @@ class Trip
         return $this->dateTimeStart;
     }
 
-    public function setDateTimeStart(\DateTimeInterface $dateTimeStart): self
+    public function setDateTimeStart(?\DateTimeInterface $dateTimeStart): self
     {
         $this->dateTimeStart = $dateTimeStart;
 
@@ -117,7 +173,7 @@ class Trip
         return $this->duration;
     }
 
-    public function setDuration(int $duration): self
+    public function setDuration(?int $duration): self
     {
         $this->duration = $duration;
 
@@ -129,7 +185,7 @@ class Trip
         return $this->dateLimitForRegistration;
     }
 
-    public function setDateLimitForRegistration(\DateTimeInterface $dateLimitForRegistration): self
+    public function setDateLimitForRegistration(?\DateTimeInterface $dateLimitForRegistration): self
     {
         $this->dateLimitForRegistration = $dateLimitForRegistration;
 

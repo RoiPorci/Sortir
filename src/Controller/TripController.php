@@ -3,13 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\Trip;
+use App\Entity\User;
 use App\Form\TripType;
+use App\Repository\CampusRepository;
+use App\Repository\StateRepository;
 use App\Repository\TripRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use http\Client\Request;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class TripController extends AbstractController
 {
@@ -29,11 +33,35 @@ class TripController extends AbstractController
 
     /**
      * @Route("/create", name="trip_create")
+     * @param Request $request
+     * @param StateRepository $stateRepository
+     * @param EntityManagerInterface $entityManager
+     * @return Response
      */
-    public function create(): Response {
-
+    public function create(Request $request, StateRepository $stateRepository, EntityManagerInterface $entityManager): Response {
         $trip = new Trip();
         $form = $this->createForm(TripType::class, $trip);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $createdState = $stateRepository->findBy(['wording' => 'Créée'])[0];
+
+            $user = $this->getUser();
+
+            $campus = $user->getCampus();
+
+            //dd($campus);
+
+            $trip->setState($createdState);
+            $trip->setOrganiser($user);
+            $trip->setOrganiserCampus($campus);
+
+            //dd($trip);
+
+            $entityManager->persist($trip);
+            $entityManager->flush();
+        }
 
         return $this->render('trip/createTrip.html.twig', [
             'tripForm' => $form->createView()

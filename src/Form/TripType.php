@@ -7,7 +7,6 @@ use App\Entity\Location;
 use App\Entity\Trip;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -56,7 +55,23 @@ class TripType extends AbstractType
                 ]
 
             ])
-
+            ->add('city', EntityType::class, [
+                'class' => City::class,
+                'choice_label' => 'name',
+                'label' => 'Ville :',
+                'required' => false,
+                'mapped' => false,
+                "attr" => [
+                    "class" => "form-select"],
+            ])
+            ->add('location', EntityType::class, [
+                'class' => Location::class,
+                'choice_label' => 'name',
+                'label' => 'Lieu :',
+                'required' => false,
+                "attr" => [
+                    "class" => "form-select"],
+            ])
         ;
     }
 
