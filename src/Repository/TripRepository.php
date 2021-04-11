@@ -112,7 +112,7 @@ class TripRepository extends ServiceEntityRepository
         $queryBuilder->join('t.state', 's');
         $queryBuilder->addSelect('s');
 
-        $queryBuilder->join('t.participants', 'p');
+        $queryBuilder->leftJoin('t.participants', 'p');
         $queryBuilder->addSelect('p');
 
         $queryBuilder->join('t.organiserCampus', 'c');
@@ -150,7 +150,7 @@ class TripRepository extends ServiceEntityRepository
         $queryBuilder->join('t.organiser', 'o');
         $queryBuilder->addSelect('o');
 
-        $queryBuilder->join('t.participants', 'p');
+        $queryBuilder->leftJoin('t.participants', 'p');
         $queryBuilder->addSelect('p');
 
         $queryBuilder->join('l.city', 'lc');
@@ -158,6 +158,8 @@ class TripRepository extends ServiceEntityRepository
 
         $query = $queryBuilder->getQuery();
         $result = $query->getOneOrNullResult();
+
+        dd($result);
 
         return $result;
     }
@@ -188,7 +190,7 @@ class TripRepository extends ServiceEntityRepository
         $queryBuilder->join('t.state', 's');
         $queryBuilder->addSelect('s');
 
-        $queryBuilder->join('t.participants', 'p');
+        $queryBuilder->leftJoin('t.participants', 'p');
         $queryBuilder->addSelect('p');
 
         $query = $queryBuilder->getQuery();

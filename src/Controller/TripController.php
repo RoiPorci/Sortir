@@ -55,11 +55,10 @@ class TripController extends AbstractController
             }
 
             $user = $this->getUser();
-            $campus = $user->getCampus();
 
             $trip->setState($state);
             $trip->setOrganiser($user);
-            $trip->setOrganiserCampus($campus);
+            $trip->setOrganiserCampus($user->getCampus());
 
             $entityManager->persist($trip);
             $entityManager->flush();

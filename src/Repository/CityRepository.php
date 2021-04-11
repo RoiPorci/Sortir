@@ -25,7 +25,7 @@ class CityRepository extends ServiceEntityRepository
         $queryBuilder->andWhere('c.id = :id');
         $queryBuilder->setParameter(':id', $id);
 
-        $queryBuilder->join('c.locations', 'l');
+        $queryBuilder->leftJoin('c.locations', 'l');
         $queryBuilder->addSelect('l');
 
         $query = $queryBuilder->getQuery();
