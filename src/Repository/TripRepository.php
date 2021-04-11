@@ -159,8 +159,6 @@ class TripRepository extends ServiceEntityRepository
         $query = $queryBuilder->getQuery();
         $result = $query->getOneOrNullResult();
 
-        dd($result);
-
         return $result;
     }
 
