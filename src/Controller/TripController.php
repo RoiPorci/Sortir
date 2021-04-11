@@ -45,19 +45,21 @@ class TripController extends AbstractController
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
-            $createdState = $stateRepository->findBy(['wording' => 'Créée'])[0];
+            $button = $form->getClickedButton()->getName();
+            if ($button == 'create'){
+                $state = $stateRepository->findBy(['wording' => 'Créée'])[0];
+            }
+            else
+            {
+                $state = $stateRepository->findBy(['wording' => 'Ouverte'])[0];
+            }
 
             $user = $this->getUser();
-
             $campus = $user->getCampus();
 
-            //dd($campus);
-
-            $trip->setState($createdState);
+            $trip->setState($state);
             $trip->setOrganiser($user);
             $trip->setOrganiserCampus($campus);
-
-            //dd($trip);
 
             $entityManager->persist($trip);
             $entityManager->flush();
