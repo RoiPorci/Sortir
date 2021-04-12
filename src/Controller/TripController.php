@@ -8,6 +8,7 @@ use App\Form\TripType;
 use App\Repository\CampusRepository;
 use App\Repository\StateRepository;
 use App\Repository\TripRepository;
+use App\Services\Updater;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,6 +19,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class TripController extends AbstractController
 {
     const OUVERTE = 'Ouverte';
+    const CLÔTURÉE = 'Clôturée';
 
     /**
      * @Route("/trip/{id}", name="trip_getDetail")
@@ -72,17 +74,17 @@ class TripController extends AbstractController
     /**
      * @Route("/register/trip/{id}", name="trip_registerForATrip")
      */
-    public function registerForATrip($id, TripRepository $tripRepository, EntityManagerInterface $entityManager): Response
+    public function registerForATrip($id,
+                                     TripRepository $tripRepository,
+                                     EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
 
         $tripForRegistration = $tripRepository->findATripForRegister($id);
 
         $tripState = $tripForRegistration->getState()->getWording();
-        $tripDateLimitForRegistration = $tripForRegistration->getDateLimitForRegistration();
         $tripMaxRegistrationNumber = $tripForRegistration->getMaxRegistrationNumber();
         $tripParticipants = $tripForRegistration->getParticipants()->toArray();
-        $now = new \DateTime();
 
         if (in_array($user, $tripParticipants))
         {
@@ -100,7 +102,8 @@ class TripController extends AbstractController
             $tripIsOpened = true;
         }
 
-        if (count($tripParticipants) >= $tripMaxRegistrationNumber){
+        if (count($tripParticipants) >= $tripMaxRegistrationNumber)
+        {
             $this->addFlash('danger', 'Désolé, la sortie est déjà complète');
             $tripIsFull = true;
         } else {
@@ -115,6 +118,12 @@ class TripController extends AbstractController
             $this->addFlash('success', 'Vous êtes inscrit! ');
         }
 
+        $tripForRegistration = $tripRepository->findATripForRegister($id);
+        $tripParticipants = $tripForRegistration->getParticipants()->toArray();
+        if (count($tripParticipants) == $tripMaxRegistrationNumber)
+        {
+            dd(count($tripParticipants));
+        }
         //TODO clôturer la sortie si nb max atteint
 
         return $this->redirectToRoute('main_home');

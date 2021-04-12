@@ -3,6 +3,7 @@
 {% block javascripts %}
     <script src="{{ asset('js/paginations/listTripPagination.js') }}"></script>
     <script src="{{ asset('js/ajax/publishTrip.js') }}"></script>
+    <script src="{{ asset('js/ajax/registerAndCancelTrip.js') }}"></script>
 {% endblock %}
 
 {% block title %}{{ parent() }}Sortir{% endblock %}
@@ -121,7 +122,7 @@
                         </div>
                         <div class="card-subtitle home-trip-subtitle mb-2 d-flex justify-content-between">
                             <span class="col-7 text-left">Organisateur : {{ trip.organiser.username }}</span>
-                            <span class="col-2 text-center">Inscrits : {{ trip.participants|length }}/{{ trip.maxRegistrationNumber }}</span>
+                            <span class="col-2 text-center">Inscrits : <span id="trip-participants-lenght-{{ trip.id }}">{{ trip.participants|length }}</span>/{{ trip.maxRegistrationNumber }}</span>
                             <span class="col-2 text-right home-wording">Fin d'inscription le {{ trip.dateLimitForRegistration|date('d/m/Y') }}</span>
                         </div>
                         <p class="card-text">{{ trip.details }}</p>
@@ -138,9 +139,9 @@
                             </div>
                             <div>
                                 {% if app.user not in trip.participants %}
-                                    <a href="{{ path('trip_registerForATrip', {id:trip.id}) }}" class="btn btn-blue-light-nav"><i class="fas fa-door-open"></i> S'inscrire</a>
+                                    <span class="btn btn-blue-light-nav btn-register" data-id="{{ trip.id }}"><i class="fas fa-door-open"></i> S'inscrire</span>
                                 {% else %}
-                                    <a href="{{ path('trip_getDetail', {id:trip.id}) }}" class="btn btn-blue-light-nav"><i class="fas fa-sign-out-alt"></i> Se désister</a>
+                                    <span class="btn btn-blue-light-nav btn-cancel" data-id="{{ trip.id }}"><i class="fas fa-sign-out-alt"></i> Se désister</span>
                                 {% endif %}
                             </div>
                         </div>

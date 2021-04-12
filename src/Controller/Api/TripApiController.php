@@ -12,6 +12,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TripApiController extends AbstractController
 {
+    const OUVERTE = 'Ouverte';
+
+
     /**
      * @Route("/api/trip/publish/{id}", name="api_trip_api", requirements={"id": "\d+"})
      * @param int $id
@@ -43,4 +46,49 @@ class TripApiController extends AbstractController
 
         return new JsonResponse(['isPublished' => $isPublished]);
     }
+
+    /**
+     * @Route("/api/trip/register-user/{id}", name="api_trip_registerForATrip", requirements={"id": "\d+"})
+     */
+    public function registerForATrip($id,
+                                     TripRepository $tripRepository,
+                                     EntityManagerInterface $entityManager,
+                                     StateRepository $stateRepository): Response
+    {
+        $user = $this->getUser();
+        $tripForRegistration = $tripRepository->findATripForRegister($id);
+        $isRegistered = false;
+
+        $tripState = $tripForRegistration->getState()->getWording();
+        $tripMaxRegistrationNumber = $tripForRegistration->getMaxRegistrationNumber();
+        $tripParticipants = $tripForRegistration->getParticipants()->toArray();
+
+        if ( !in_array($user, $tripParticipants)
+            AND $tripState === self::OUVERTE
+            AND count($tripParticipants) < $tripMaxRegistrationNumber)
+        {
+            $tripForRegistration->addParticipant($user);
+            $entityManager->persist($tripForRegistration);
+            $entityManager->flush();
+
+            $isRegistered = true;
+        }
+
+        $tripForRegistration = $tripRepository->findATripForRegister($id);
+        $tripParticipants = $tripForRegistration->getParticipants()->toArray();
+        $tripParticipantsNumber = count($tripParticipants);
+        if ($tripParticipantsNumber == $tripMaxRegistrationNumber)
+        {
+            $completed = $stateRepository->findBy(['wording' => 'Clôturée'])[0];
+
+            $tripForRegistration->setState($completed);
+
+            $entityManager->persist($tripForRegistration);
+            $entityManager->flush();
+        }
+
+        return new JsonResponse(['isRegistered' => $isRegistered, 'tripParticipantsNumber' => $tripParticipantsNumber]);
+
+    }
+    
 }
