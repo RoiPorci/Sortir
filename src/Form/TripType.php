@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\City;
 use App\Entity\Location;
 use App\Entity\Trip;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -13,10 +14,20 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TripType extends AbstractType
 {
+    private EntityManagerInterface $manager;
+
+    public function __construct(EntityManagerInterface $manager)
+    {
+        $this->manager = $manager;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -46,40 +57,66 @@ class TripType extends AbstractType
                 'label'=> "Description et infos :",
                 'required' => false
             ])
-            ->add('city', EntityType::class, [
-                'label' => 'Ville :',
-                'mapped' => false,
-                'choice_label' => 'name',
-                'class' => City::class,
-                'attr' => [
-                    "class" => "form-select"
-                ]
-
-            ])
-            ->add('city', EntityType::class, [
-                'class' => City::class,
-                'choice_label' => 'name',
-                'label' => 'Ville :',
-                'required' => false,
-                'mapped' => false,
-                "attr" => [
-                    "class" => "form-select"],
-            ])
-            ->add('location', EntityType::class, [
-                'class' => Location::class,
-                'choice_label' => 'name',
-                'label' => 'Lieu :',
-                'required' => false,
-                "attr" => [
-                    "class" => "form-select"],
-            ])
             ->add('create', SubmitType::class, [
                 'label' => 'Enregistrer'
             ])
             ->add('publish', SubmitType::class, [
                 'label' => 'Publier'
             ])
+            ->addEventListener(FormEvents::PRE_SET_DATA, [$this, 'onPreSetData'])
+            ->addEventListener(FormEvents::PRE_SUBMIT, [$this, 'onPreSubmit'])
         ;
+    }
+
+    public function addElements(FormInterface $form, City $city = null){
+        $form->add('city', EntityType::class, [
+            'class' => City::class,
+            'choice_label' => 'name',
+            'label' => 'Ville :',
+            'required' => false,
+            'mapped' => false,
+            "attr" => [
+                "class" => "form-select"],
+        ]);
+
+        $locations = [];
+
+        if ($city) {
+            $locationRepository = $this->manager->getRepository('App:Location');
+            $locations = $locationRepository->findBy(['city' => $city]);
+        }
+        $form->add('location', EntityType::class, [
+            'class' => Location::class,
+            'choices' => $locations,
+            'choice_label' => 'name',
+            'label' => 'Lieu :',
+            'required' => false,
+            "attr" => [
+                "class" => "form-select"],
+        ]);
+    }
+
+    public function onPreSubmit(FormEvent $event){
+        $form = $event->getForm();
+        $data = $event->getData();
+
+        $city = $this->manager->getRepository('App:City')->find($data['city']);
+
+        $this->addElements($form, $city);
+    }
+
+    public function onPreSetData(FormEvent $event){
+        $trip = $event->getData();
+        $form = $event->getForm();
+
+        if($trip->getLocation()){
+            $city = $trip->getLocation()->getCity();
+        }
+        else {
+            $city = null;
+        }
+
+        $this->addElements($form, $city);
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -20,7 +20,7 @@ function publishTrip(event){
         .then((response) => {
             return response.json();
         })
-        .then( function(data){
+        .then( (data) => {
             if(data.isPublished){
                 //TODO créer une fenêtre modale pour indiquer que la sortie a été publiée
                 spanState.innerText = 'Ouverte';

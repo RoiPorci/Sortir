@@ -19,7 +19,7 @@ class Updater
     /** @var EntityManagerInterface */
     private EntityManagerInterface $entityManager;
 
-    private array $states;
+    public array $states;
 
     public function __construct(
         TripRepository $tripRepository,
@@ -40,8 +40,11 @@ class Updater
 
         foreach ($statesDb as $stateDb){
             switch ($stateDb->getWording()){
-                case 'Passée':
-                    $index = 'past';
+                case 'Créée':
+                    $index = 'created';
+                    break;
+                case 'Ouverte':
+                    $index = 'opened';
                     break;
                 case 'Clôturée':
                     $index = 'completed';
@@ -49,8 +52,11 @@ class Updater
                 case 'Activité en cours':
                     $index = 'ongoing';
                     break;
-                case 'Ouverte':
-                    $index = 'opened';
+                case 'Passée':
+                    $index = 'past';
+                    break;
+                case 'Annulée':
+                    $index = 'canceled';
                     break;
                 default:
                     $index = '';

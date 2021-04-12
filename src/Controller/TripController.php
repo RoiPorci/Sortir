@@ -10,6 +10,7 @@ use App\Repository\StateRepository;
 use App\Repository\TripRepository;
 use App\Services\Updater;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,11 +19,25 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class TripController extends AbstractController
 {
-    const OUVERTE = 'Ouverte';
-    const CLÔTURÉE = 'Clôturée';
+    /**
+     * @var Updater
+     */
+    private Updater $updater;
+
+    private array $states;
+
+    public function __construct(Updater $updater)
+    {
+        $this->updater = $updater;
+        $this->states = $this->updater->states;
+    }
 
     /**
      * @Route("/trip/{id}", name="trip_getDetail")
+     * @param $id
+     * @param TripRepository $tripRepository
+     * @return Response
+     * @throws NonUniqueResultException
      */
     public function getDetail($id, TripRepository $tripRepository): Response
     {
@@ -36,11 +51,10 @@ class TripController extends AbstractController
     /**
      * @Route("/create", name="trip_create")
      * @param Request $request
-     * @param StateRepository $stateRepository
      * @param EntityManagerInterface $entityManager
      * @return Response
      */
-    public function create(Request $request, StateRepository $stateRepository, EntityManagerInterface $entityManager): Response {
+    public function create(Request $request, EntityManagerInterface $entityManager): Response {
         $trip = new Trip();
         $form = $this->createForm(TripType::class, $trip);
 
@@ -49,11 +63,11 @@ class TripController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
             $button = $form->getClickedButton()->getName();
             if ($button == 'create'){
-                $state = $stateRepository->findBy(['wording' => 'Créée'])[0];
+                $state = $this->states['created'];
             }
             else
             {
-                $state = $stateRepository->findBy(['wording' => 'Ouverte'])[0];
+                $state = $this->states['opened'];
             }
 
             $user = $this->getUser();
@@ -66,8 +80,11 @@ class TripController extends AbstractController
             $entityManager->flush();
         }
 
+        $location = $trip->getLocation();
+
         return $this->render('trip/createTrip.html.twig', [
-            'tripForm' => $form->createView()
+            'tripForm' => $form->createView(),
+            'location' => $location
         ]);
     }
 
@@ -82,7 +99,7 @@ class TripController extends AbstractController
 
         $tripForRegistration = $tripRepository->findATripForRegister($id);
 
-        $tripState = $tripForRegistration->getState()->getWording();
+        $tripState = $tripForRegistration->getState();
         $tripMaxRegistrationNumber = $tripForRegistration->getMaxRegistrationNumber();
         $tripParticipants = $tripForRegistration->getParticipants()->toArray();
 
@@ -94,7 +111,7 @@ class TripController extends AbstractController
             $userIsRegisteredForTrip = false;
         }
 
-        if (!$tripState === self::OUVERTE)
+        if (!$tripState === $this->states['opened'])
         {
             $this->addFlash('danger', 'Désolé, l\'inscription n\'est pas encore ouverte');
             $tripIsOpened = false;

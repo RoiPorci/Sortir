@@ -4,6 +4,7 @@ namespace App\Controller\Api;
 
 use App\Repository\StateRepository;
 use App\Repository\TripRepository;
+use App\Services\Updater;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -12,6 +13,19 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TripApiController extends AbstractController
 {
+    /**
+     * @var Updater
+     */
+    private Updater $updater;
+
+    private array $states;
+
+    public function __construct(Updater $updater)
+    {
+        $this->updater = $updater;
+        $this->states = $this->updater->states;
+    }
+
     const OUVERTE = 'Ouverte';
 
 
@@ -19,23 +33,21 @@ class TripApiController extends AbstractController
      * @Route("/api/trip/publish/{id}", name="api_trip_api", requirements={"id": "\d+"})
      * @param int $id
      * @param TripRepository $tripRepository
-     * @param StateRepository $stateRepository
      * @param EntityManagerInterface $manager
      * @return Response
      */
-    public function publishTrip(int $id, TripRepository $tripRepository, StateRepository $stateRepository, EntityManagerInterface $manager): Response
+    public function publishTrip(int $id, TripRepository $tripRepository, EntityManagerInterface $manager): Response
     {
         $user = $this->getUser();
+
         $trip = $tripRepository->findBy(['organiser' => $user, 'id' => $id])[0];
         $isPublished = false;
 
         if ($trip){
-            $created = $stateRepository->findBy(['wording' => 'Créée'])[0];
 
-            if ($trip->getState() == $created){
-                $opened = $stateRepository->findBy(['wording' => 'Ouverte'])[0];
+            if ($trip->getState() == $this->states['created']){
 
-                $trip->setState($opened);
+                $trip->setState($this->states['opened']);
 
                 $manager->persist($trip);
                 $manager->flush();
@@ -49,17 +61,22 @@ class TripApiController extends AbstractController
 
     /**
      * @Route("/api/trip/register-user/{id}", name="api_trip_registerForATrip", requirements={"id": "\d+"})
+     * @param int $id
+     * @param TripRepository $tripRepository
+     * @param EntityManagerInterface $entityManager
+     * @return Response
      */
-    public function registerForATrip($id,
-                                     TripRepository $tripRepository,
-                                     EntityManagerInterface $entityManager,
-                                     StateRepository $stateRepository): Response
+    public function registerForATrip(
+        int $id,
+        TripRepository $tripRepository,
+        EntityManagerInterface $entityManager
+        ): Response
     {
         $user = $this->getUser();
         $tripForRegistration = $tripRepository->findATripForRegister($id);
         $isRegistered = false;
 
-        $tripState = $tripForRegistration->getState()->getWording();
+        $tripState = $tripForRegistration->getState();
         $tripMaxRegistrationNumber = $tripForRegistration->getMaxRegistrationNumber();
         $tripParticipants = $tripForRegistration->getParticipants()->toArray();
         $tripLimitDate = $tripForRegistration->getDateLimitForRegistration();
@@ -67,9 +84,9 @@ class TripApiController extends AbstractController
         $now = new \DateTime();
 
         if ( !in_array($user, $tripParticipants)
-            && $tripState === self::OUVERTE
+            && $tripState === $this->states['opened']
             && count($tripParticipants) < $tripMaxRegistrationNumber
-            && $tripLimitDate < $now )
+            && $tripLimitDate > $now)
         {
             $tripForRegistration->addParticipant($user);
             $entityManager->persist($tripForRegistration);
@@ -86,10 +103,7 @@ class TripApiController extends AbstractController
 
         if ($tripParticipantsNumber == $tripMaxRegistrationNumber)
         {
-
-            $completed = $stateRepository->findBy(['wording' => 'Clôturée'])[0];
-
-            $tripForRegistration->setState($completed);
+            $tripForRegistration->setState($this->states['completed']);
 
             $entityManager->persist($tripForRegistration);
             $entityManager->flush();
@@ -105,11 +119,16 @@ class TripApiController extends AbstractController
 
     /**
      * @Route("/api/trip/cancel-user/{id}", name="api_trip_cancelForATrip", requirements={"id": "\d+"})
+     * @param int $id
+     * @param TripRepository $tripRepository
+     * @param EntityManagerInterface $entityManager
+     * @return Response
      */
-    public function cancelForATrip($id,
-                                     TripRepository $tripRepository,
-                                     EntityManagerInterface $entityManager,
-                                     StateRepository $stateRepository): Response
+    public function cancelForATrip(
+        int $id,
+        TripRepository $tripRepository,
+        EntityManagerInterface $entityManager
+        ): Response
     {
         $user = $this->getUser();
         $tripForCancel = $tripRepository->findATripForRegister($id);
@@ -136,10 +155,7 @@ class TripApiController extends AbstractController
 
         if ($tripParticipantsNumber < $tripMaxRegistrationNumber)
         {
-
-            $opened = $stateRepository->findBy(['wording' => 'Ouverte'])[0];
-
-            $tripForCancel->setState($opened);
+            $tripForCancel->setState($this->states['opened']);
 
             $entityManager->persist($tripForCancel);
             $entityManager->flush();

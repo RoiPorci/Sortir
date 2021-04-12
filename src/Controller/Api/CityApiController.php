@@ -3,6 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Repository\CityRepository;
+use App\Repository\LocationRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,19 +14,16 @@ use Symfony\Component\Serializer\SerializerInterface;
 class CityApiController extends AbstractController
 {
     /**
-     * @Route("/create/api/city", name="api_city")
+     * @Route("/api/get-locations-from-{id}", name="api_get_locations_from_city", requirements={"id": "\d+"})
+     * @param int $id
      * @param Request $request
      * @param CityRepository $cityRepository
      * @param SerializerInterface $serializer
      * @return Response
      */
-    public function getLocations(Request $request, CityRepository $cityRepository, SerializerInterface $serializer): Response
+    public function getLocationsFromCity(int $id, Request $request, CityRepository $cityRepository, SerializerInterface $serializer): Response
     {
-        $data = json_decode($request->getContent());
-
-        $cityId = $data->cityId;
-
-        $city = $cityRepository->find($cityId);
+        $city = $cityRepository->findCityWithLocations($id);
 
         $json = $serializer->serialize($city, 'json', ['groups' => 'city_read']);
 
