@@ -30,10 +30,10 @@ class Updater
         $this->stateRepository = $stateRepository;
         $this->entityManager = $entityManager;
 
-        $this->states = $this->initializeStates();
+        $this->states = $this->getAllStates();
     }
 
-    public function initializeStates(): array
+    public function getAllStates(): array
     {
         $statesDb = $this->stateRepository->findAll();
         $statesOrganized = null;
