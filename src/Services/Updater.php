@@ -30,11 +30,13 @@ class Updater
         $this->stateRepository = $stateRepository;
         $this->entityManager = $entityManager;
 
-        $this->initializeStates();
+        $this->states = $this->initializeStates();
     }
 
-    private function initializeStates(){
+    public function initializeStates(): array
+    {
         $statesDb = $this->stateRepository->findAll();
+        $statesOrganized = null;
 
         foreach ($statesDb as $stateDb){
             switch ($stateDb->getWording()){
@@ -53,8 +55,10 @@ class Updater
                 default:
                     $index = '';
             }
-            $this->states[$index] = $stateDb;
+            $statesOrganized[$index] = $stateDb;
         }
+
+        return $statesOrganized;
     }
 
     public function updateTripsState()
