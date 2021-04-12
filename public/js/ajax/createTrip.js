@@ -34,11 +34,6 @@ function loadLocations(){
                 spanZipCode.innerText = city.zipCode;
 
                 createLocationsOption(city.locations);
-
-                //On enlève le choix vide
-                /*if (selectCity.options[0].innerText == ''){
-                    selectCity.options.remove(0);
-                }*/
             })
     }
     else {
