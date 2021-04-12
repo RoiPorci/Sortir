@@ -139,9 +139,9 @@
                             </div>
                             <div>
                                 {% if app.user not in trip.participants %}
-                                    <span class="btn btn-blue-light-nav btn-register" data-id="{{ trip.id }}"><i class="fas fa-door-open"></i> S'inscrire</span>
+                                    <span class="btn btn-blue-light-nav btn-update-participant" data-value="register" data-id="{{ trip.id }}"><i class="fas fa-door-open"></i> S'inscrire</span>
                                 {% else %}
-                                    <span class="btn btn-blue-light-nav btn-cancel" data-id="{{ trip.id }}"><i class="fas fa-sign-out-alt"></i> Se désister</span>
+                                    <span class="btn btn-blue-light-nav btn-update-participant" data-value="cancel" data-id="{{ trip.id }}"><i class="fas fa-sign-out-alt"></i> Se désister</span>
                                 {% endif %}
                             </div>
                         </div>
