@@ -2,6 +2,7 @@
 
 {% block javascripts %}
     <script src="{{ asset('js/paginations/listTripPagination.js') }}"></script>
+    <script src="{{ asset('js/ajax/publishTrip.js') }}"></script>
 {% endblock %}
 
 {% block title %}{{ parent() }}Sortir{% endblock %}
@@ -116,7 +117,7 @@
                         <div class="home-trip-title card-title d-flex justify-content-between">
                             <h5 class="col-7 text-left">{{ trip.name }}</h5>
                             <span class="col-2 text-center"> à partir du {{ trip.dateTimeStart|date('d/m/Y') }} à {{ trip.dateTimeStart | date('H:i') }}</span>
-                            <span class="col-2 text-right home-wording">Etat : {{ trip.state.wording }}</span>
+                            <span class="col-2 text-right home-wording">Etat : <span id="trip-state-wording-{{ trip.id }}">{{ trip.state.wording }}</span></span>
                         </div>
                         <div class="card-subtitle home-trip-subtitle mb-2 d-flex justify-content-between">
                             <span class="col-7 text-left">Organisateur : {{ trip.organiser.username }}</span>
@@ -130,7 +131,7 @@
                                 <a href="{{ path('trip_getDetail', {id:trip.id}) }}" class="btn btn-blue-light-nav"><i class="fas fa-eye"></i> Afficher</a>
                                 {% if app.user == trip.organiser %}
                                     {% if trip.state.wording == 'Créée' %}
-                                        <a href="#" class="btn btn-blue-light-nav"><i class="fas fa-upload"></i> Publier</a>
+                                        <span class="btn btn-blue-light-nav btn-publish" data-id="{{ trip.id }}"><i class="fas fa-upload"></i> Publier</span>
                                     {% endif %}
                                     <a href="#" class="btn btn-blue-light-nav"><i class="fas fa-pen"></i> Modifier</a>
                                 {% endif %}
