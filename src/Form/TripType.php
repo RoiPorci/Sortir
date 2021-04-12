@@ -88,6 +88,7 @@ class TripType extends AbstractType
         $form->add('location', EntityType::class, [
             'class' => Location::class,
             'choices' => $locations,
+            'placeholder' => false,
             'choice_label' => 'name',
             'label' => 'Lieu :',
             'required' => false,
