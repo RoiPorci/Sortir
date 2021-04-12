@@ -25,8 +25,6 @@ function updateAUserOnTrip(event){
             })
             .then( function(data){
                 if(data.isRegistered){
-                    //TODO créer une fenêtre modale pour indiquer que la sortie a été publiée
-
                     let i = document.createElement('i');
                     i.setAttribute('class', 'fas fa-sign-out-alt');
                     btnUpdate.innerText = " se désister";
@@ -34,6 +32,8 @@ function updateAUserOnTrip(event){
                     btnUpdate.dataset.value = "cancel";
 
                     spanRegisteredNumber.innerText = data.tripParticipantsNumber;
+
+                    sendInfoModal('Succès', 'Vous êtes inscrit!');
                 }
                 if (data.isCompleted) {
                     spanState.innerText = "Clôturée";
@@ -58,6 +58,8 @@ function updateAUserOnTrip(event){
                     btnUpdate.dataset.value = "register";
 
                     spanRegisteredNumber.innerText = data.tripParticipantsNumber;
+
+                    sendInfoModal('Succès', 'Votre inscription est annulée!');
                 }
                 if (data.isOpened) {
                     spanState.innerText = "Ouverte";

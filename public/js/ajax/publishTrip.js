@@ -22,9 +22,11 @@ function publishTrip(event){
         })
         .then( (data) => {
             if(data.isPublished){
-                //TODO créer une fenêtre modale pour indiquer que la sortie a été publiée
                 spanState.innerText = 'Ouverte';
                 btnPublish.remove();
+
+                //Paramétrer la fenêtre la modale
+                sendInfoModal('Succès', 'Votre sortie a bien été publiée!');
             }
         })
 }
