@@ -20,7 +20,7 @@ function getCityDetails(){
     let selectCity = document.getElementById('trip_city');
     let data = {'cityId' : selectCity.value};
 
-    fetch("create/api/city", {method: 'GET', body: JSON.stringify(data)})
+    fetch("create/api/city", {method: 'POST', body: JSON.stringify(data)})
         .then(function (response){
             return response.json();
         })
