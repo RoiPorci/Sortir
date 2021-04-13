@@ -84,10 +84,10 @@ class TripRepository extends ServiceEntityRepository
         }
 
         $now = new \DateTime();
-        $oneMonthBeforeNow = $now->sub(\DateInterval::createFromDateString('1 month'));
+        $dateArchived = $now->modify('-1 month');
 
         $queryBuilder->andWhere('t.dateTimeStart > :dateArchived');
-        $queryBuilder->setParameter(':dateArchived', $oneMonthBeforeNow);
+        $queryBuilder->setParameter(':dateArchived', $dateArchived);
 
         //Mise en place de la pagination :
         $queryBuilder->select('COUNT(t)');
@@ -140,6 +140,12 @@ class TripRepository extends ServiceEntityRepository
         $queryBuilder->andWhere('t.id = :id');
         $queryBuilder->setParameter('id', $id);
 
+        $now = new \DateTime();
+        $dateArchived = $now->modify('-1 month');
+
+        $queryBuilder->andWhere('t.dateTimeStart > :dateArchived');
+        $queryBuilder->setParameter(':dateArchived', $dateArchived);
+
         //On ajoute des jointures pour éviter les multiples requêtes par Doctrine
         $queryBuilder->join('t.organiserCampus', 'c');
         $queryBuilder->addSelect('c');
@@ -167,10 +173,10 @@ class TripRepository extends ServiceEntityRepository
         $queryBuilder = $this->createQueryBuilder('t');
 
         $now = new \DateTime();
-        $oneMonthBeforeNow = $now->sub(\DateInterval::createFromDateString('1 month'));
+        $dateArchived = $now->modify('-1 month');
 
         $queryBuilder->andWhere('t.dateTimeStart > :dateArchived');
-        $queryBuilder->setParameter(':dateArchived', $oneMonthBeforeNow);
+        $queryBuilder->setParameter(':dateArchived', $dateArchived);
 
         $query = $queryBuilder->getQuery();
 
