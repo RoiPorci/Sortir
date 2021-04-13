@@ -2,9 +2,11 @@
 
 namespace App\Form;
 
+use App\Entity\Campus;
 use App\Entity\City;
 use App\Entity\Location;
 use App\Entity\Trip;
+use App\Services\Updater;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -22,10 +24,18 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class TripType extends AbstractType
 {
     private EntityManagerInterface $manager;
+    /**
+     * @var Updater
+     */
+    private Updater $updater;
 
-    public function __construct(EntityManagerInterface $manager)
+    private array $states;
+
+    public function __construct(EntityManagerInterface $manager, Updater $updater)
     {
         $this->manager = $manager;
+        $this->updater = $updater;
+        $this->states = $this->updater->states;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -60,15 +70,15 @@ class TripType extends AbstractType
             ->add('create', SubmitType::class, [
                 'label' => 'Enregistrer'
             ])
-            ->add('publish', SubmitType::class, [
-                'label' => 'Publier'
-            ])
             ->addEventListener(FormEvents::PRE_SET_DATA, [$this, 'onPreSetData'])
             ->addEventListener(FormEvents::PRE_SUBMIT, [$this, 'onPreSubmit'])
         ;
     }
 
     public function addElements(FormInterface $form, City $city = null){
+        $form->add('publish', SubmitType::class, [
+            'label' => 'Publier'
+        ]);
         $form->add('city', EntityType::class, [
             'class' => City::class,
             'choice_label' => 'name',
@@ -97,6 +107,38 @@ class TripType extends AbstractType
         ]);
     }
 
+    public function addModifyElements(FormInterface $form, Trip $trip = null){
+        if ($trip){
+            if ($trip->getId()){
+                $form->add('organiserCampus', EntityType::class, [
+                    'class' => Campus::class,
+                    'placeholder' => false,
+                    'choice_label' => 'name',
+                    'label' => 'Campus :',
+                    'required' => false,
+                    "attr" => [
+                        "class" => "form-select"],
+                ]);
+
+                if ($trip->getState() == $this->states['created']){
+                    $form->add('publish', SubmitType::class, [
+                        'label' => 'Publier'
+                    ]);
+                }
+            }
+            else {
+                $form->add('publish', SubmitType::class, [
+                    'label' => 'Publier'
+                ]);
+            }
+        }
+        else {
+            $form->add('publish', SubmitType::class, [
+                'label' => 'Publier'
+            ]);
+        }
+    }
+
     public function onPreSubmit(FormEvent $event){
         $form = $event->getForm();
         $data = $event->getData();
@@ -118,6 +160,7 @@ class TripType extends AbstractType
         }
 
         $this->addElements($form, $city);
+        $this->addModifyElements($form, $trip);
     }
 
     public function configureOptions(OptionsResolver $resolver)
