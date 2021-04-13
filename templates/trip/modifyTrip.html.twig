@@ -9,7 +9,7 @@
 
 {% block body %}
     <section class="container">
-        <h1 class="text-center mb-5 mt-5">Créer une sortie !</h1>
+        <h1 class="text-center mb-5 mt-5">Modifier une sortie !</h1>
         <article id="formTrip" class="mb-5">
             {{ form_start(tripForm) }}
             <aside class="d-flex justify-content-between">
@@ -23,7 +23,7 @@
                 </div>
                 <div class="col-md-5 col-12">
                     <div class="form-group">
-                        <span>Campus :</span><span>{{ app.user.campus.name }}</span>
+                        {{ form_row(tripForm.organiserCampus) }}
                     </div>
                     <div class="form-group">
                         {{ form_row(tripForm.city) }}
@@ -33,16 +33,20 @@
                     </div>
                     <div id="location-infos">
                         <div class="form-group">
-                            Rue :<span id="street">{{ location is not null ? location.street : '' }}</span>
+                            Rue :
+                            <!--Rue :<span id="street">{# {{ location is not null ? location.street : '' }} #}</span>-->
                         </div>
                         <div class="form-group">
-                            Code Postal :<span id="zipCode">{{ location is not null ? location.city.zipCode : '' }}</span>
+                            Code Postal :
+                            <!--Rue :Code Postal :<span id="zipCode">{# {{ location is not null ? location.city.zipCode : '' }} #}</span>-->
                         </div>
                         <div class="form-group">
-                            Latitude :<span id="latitude">{{ location is not null ? location.latitude : '' }}</span>
+                            Latitude :
+                            <!--Latitude :<span id="latitude">{# {{ location is not null ? location.latitude : '' }} #}</span>-->
                         </div>
                         <div class="form-group">
-                            Longitude :<span id="longitude">{{ location is not null ? location.longitude : '' }}</span>
+                            Longitude :
+                            <!--Longitude :<span id="longitude">{# {{ location is not null ? location.longitude : '' }} #}</span>-->
                         </div>
                     </div>
                 </div>

@@ -100,11 +100,11 @@ class TripController extends AbstractController
 
         $trip = $tripRepository->findTripWithoutParticipants($id);
         $form = $this->createForm(TripType::class, $trip);
-        dd($trip);
+        //dd($trip);
 
         $form->handleRequest($request);
 
-        return $this->render('trip/createTrip.html.twig', [
+        return $this->render('trip/modifyTrip.html.twig', [
             'tripForm' => $form->createView(),
         ]);
     }

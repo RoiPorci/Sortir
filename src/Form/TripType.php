@@ -75,10 +75,8 @@ class TripType extends AbstractType
         ;
     }
 
-    public function addElements(FormInterface $form, City $city = null){
-        $form->add('publish', SubmitType::class, [
-            'label' => 'Publier'
-        ]);
+    public function addElements(FormInterface $form, City $city = null)
+    {
         $form->add('city', EntityType::class, [
             'class' => City::class,
             'choice_label' => 'name',
