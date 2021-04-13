@@ -78,6 +78,8 @@ class TripController extends AbstractController
 
             $entityManager->persist($trip);
             $entityManager->flush();
+
+            return $this->redirectToRoute('trip_getDetail', ['id' => $trip->getId()]);
         }
 
         $location = $trip->getLocation();
