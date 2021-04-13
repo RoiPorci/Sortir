@@ -83,6 +83,7 @@ class TripType extends AbstractType
             'label' => 'Ville :',
             'required' => false,
             'mapped' => false,
+            'data' => $city,
             "attr" => [
                 "class" => "form-select"],
         ]);
@@ -149,6 +150,8 @@ class TripType extends AbstractType
     public function onPreSetData(FormEvent $event){
         $trip = $event->getData();
         $form = $event->getForm();
+
+        /*dd($trip);*/
 
         if($trip->getLocation()){
             $city = $trip->getLocation()->getCity();
