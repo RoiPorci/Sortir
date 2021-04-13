@@ -1,6 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ tripDetail.name }}{% endblock %}
+{% block title %}
+    {% if tripDetail is null %}
+        sortie non consultable
+    {% else %}
+        {{ tripDetail.name }}
+    {% endif %}
+{% endblock %}
 
 {% block body %}
     <div class="container-fluid bg-light px-5 py-5 min-vh-100">
