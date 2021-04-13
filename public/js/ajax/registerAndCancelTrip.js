@@ -35,6 +35,9 @@ function updateAUserOnTrip(event){
 
                     sendInfoModal('Succès', 'Vous êtes inscrit!');
                 }
+                else {
+                    sendInfoModal('Echec', "Vous n'avez pas pu vous inscrire!");
+                }
                 if (data.isCompleted) {
                     spanState.innerText = "Clôturée";
                 }
@@ -60,6 +63,9 @@ function updateAUserOnTrip(event){
                     spanRegisteredNumber.innerText = data.tripParticipantsNumber;
 
                     sendInfoModal('Succès', 'Votre inscription est annulée!');
+                }
+                else {
+                    sendInfoModal('Echec', "Vous n'avez pas pu annuler votre inscription!");
                 }
                 if (data.isOpened) {
                     spanState.innerText = "Ouverte";

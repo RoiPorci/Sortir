@@ -28,5 +28,8 @@ function publishTrip(event){
                 //Paramétrer la fenêtre la modale
                 sendInfoModal('Succès', 'Votre sortie a bien été publiée!');
             }
+            else {
+                sendInfoModal('Echec', "Votre sortie n'a pas été publiée!");
+            }
         })
 }
