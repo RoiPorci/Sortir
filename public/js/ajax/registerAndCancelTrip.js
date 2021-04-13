@@ -33,14 +33,17 @@ function updateAUserOnTrip(event){
 
                     spanRegisteredNumber.innerText = data.tripParticipantsNumber;
 
-                    sendInfoModal('Succès', 'Vous êtes inscrit!');
+                    sendInfoModal('Succès', 'Vous êtes inscrit!', 'success');
                 }
                 else {
-                    sendInfoModal('Echec', "Vous n'avez pas pu vous inscrire!");
+                    sendInfoModal('Echec', "Vous n'avez pas pu vous inscrire!", 'danger');
                 }
                 if (data.isCompleted) {
                     spanState.innerText = "Clôturée";
                 }
+            })
+            .catch( () => {
+                sendInfoModal('Echec', "Une erreur avec le serveur est survenue!", 'danger');
             })
 
     } else if(btnUpdate.dataset.value == "cancel") {
@@ -62,14 +65,17 @@ function updateAUserOnTrip(event){
 
                     spanRegisteredNumber.innerText = data.tripParticipantsNumber;
 
-                    sendInfoModal('Succès', 'Votre inscription est annulée!');
+                    sendInfoModal('Succès', 'Votre inscription est annulée!', 'success');
                 }
                 else {
-                    sendInfoModal('Echec', "Vous n'avez pas pu annuler votre inscription!");
+                    sendInfoModal('Echec', "Vous n'avez pas pu annuler votre inscription!", 'success');
                 }
                 if (data.isOpened) {
                     spanState.innerText = "Ouverte";
                 }
+            })
+            .catch( () => {
+                sendInfoModal('Echec', "Une erreur avec le serveur est survenue!", 'danger');
             })
     }
 

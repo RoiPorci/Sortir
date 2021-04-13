@@ -10,31 +10,41 @@ function init(event){
     selectLocation.addEventListener('change', setLocationDetails);
 
     if (selectLocation.value !== ''){
-        setLocationDetails();
+        loadCity().then( () => {
+            showLocationDetails();
+        });
     }
     else{
        cleanLocationOptions();
     }
 }
 
-function loadLocations(){
+function loadCity(){
     let selectCity = document.getElementById('trip_city');
     let cityId = selectCity.value;
     let url = "api/get-locations-from-"+cityId;
 
-    if (selectCity.value !== ''){
+    return new Promise((resolve, reject) => {
         fetch(url, {method: 'POST'})
             .then((response) => {
                 return response.json();
-            })
-            .then((data) => {
+            }).then((data) => {
                 city = JSON.parse(data);
+                resolve();
+        })
+    })
+}
 
-                let spanZipCode = document.getElementById('zipCode');
-                spanZipCode.innerText = city.zipCode;
+function loadLocations(){
+    let selectCity = document.getElementById('trip_city');
 
-                createLocationsOption(city.locations);
-            })
+    if (selectCity.value !== ''){
+        loadCity().then( () => {
+            let spanZipCode = document.getElementById('zipCode');
+            spanZipCode.innerText = city.zipCode;
+
+            createLocationsOption(city.locations);
+        });
     }
     else {
         cleanLocationOptions();

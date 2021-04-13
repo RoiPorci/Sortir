@@ -26,10 +26,13 @@ function publishTrip(event){
                 btnPublish.remove();
 
                 //Paramétrer la fenêtre la modale
-                sendInfoModal('Succès', 'Votre sortie a bien été publiée!');
+                sendInfoModal('Succès', 'Votre sortie a bien été publiée!', 'success');
             }
             else {
-                sendInfoModal('Echec', "Votre sortie n'a pas été publiée!");
+                sendInfoModal('Echec', "Votre sortie n'a pas été publiée!", 'danger');
             }
+        })
+        .catch( () => {
+            sendInfoModal('Echec', "Une erreur avec le serveur est survenue!", 'danger');
         })
 }
