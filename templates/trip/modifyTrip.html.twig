@@ -56,9 +56,11 @@
                 <div class="col-4 mr-5">
                     {{ form_row(tripForm.create) }}
                 </div>
-                <div class="col-4 mr-5">
-                    {{ form_row(tripForm.publish) }}
-                </div>
+                {#{% if tripForm.publish is not null %}
+                    <div class="col-4 mr-5">
+                        {{ form_row(tripForm.publish) }}
+                    </div>
+                {% endif %}#}
                 <a class="btn btn-blue-light-retour col-3 ml-5" href="{{ path('main_home') }}">Annuler</a>
             </div>
             {{ form_end(tripForm) }}
