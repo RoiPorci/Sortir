@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Trip;
 use App\Entity\User;
+use App\Form\CancelTripType;
 use App\Form\TripType;
 use App\Repository\CampusRepository;
 use App\Repository\StateRepository;
@@ -108,6 +109,61 @@ class TripController extends AbstractController
         return $this->render('trip/modifyTrip.html.twig', [
             'tripForm' => $form->createView(),
             'location' => $location,
+        ]);
+    }
+
+    /**
+     * @Route("trip/cancel/{id}", name="trip_cancel", requirements={"id"="\d+"})
+     * @param $id
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+
+    public function cancelTrip(int $id, Request $request, TripRepository $tripRepository, StateRepository $stateRepository, EntityManagerInterface $entityManager) {
+
+        /** @var User $user */
+        $user = $this->getUser();
+        $trip = $tripRepository->findATrip($id);
+
+        if (!$trip) {
+            $this->addFlash('warning', "Cette sortie n'existe pas !");
+            return $this->redirectToRoute('main_home' );
+        }
+
+        $form = $this->createForm(CancelTripType::class, $trip);
+        $tripWording = $trip->getState()->getWording();
+        $now = new \DateTime();
+        $oldDetailTrip = $trip->getDetails();
+
+        if ($trip->getOrganiser()->getUsername() !== $user->getUsername()
+            || $trip->getDateTimeStart() < $now
+            || ($tripWording == "Activité en cours" || $tripWording == "Passée" || $tripWording == "Annulée")) {
+
+            $this->addFlash('warning', 'Vous ne pouvez pas annuler cette sortie !');
+            return $this->redirectToRoute('trip_getDetail', ['id' => $trip->getId()]);
+        }
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $cancelDetailTrip = $form['details']->getData();
+            $text_cancel = $oldDetailTrip ." Motif d'annulation : " .$cancelDetailTrip;
+            $trip->setDetails($text_cancel);
+
+            $state = $stateRepository->findBy(['wording'=> 'Annulée'])[0];
+            $trip->setState($state);
+
+            $entityManager->persist($trip);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Votre sortie a été annulée');
+            return $this->redirectToRoute('trip_getDetail', ['id' => $trip->getId()]);
+        }
+
+        return $this->render('trip/cancelTrip.html.twig', [
+            'trip' => $trip,
+            'formCancelTrip' => $form->createView()
         ]);
     }
 }
