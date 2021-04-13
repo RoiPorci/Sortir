@@ -129,30 +129,37 @@
                         </div>
                     </li>
 
-                    <h5 class="mb-2 pt-5">Liste des participants</h5>
-
-                    <ul id="table-head-participants" class="list-group">
-                        <li class="list-group-item d-flex" id="participants-list-head">
-                            <div class="col-6">
-                                Pseudo
-                            </div>
-                            <div class="col-6">
-                                Nom
-                            </div>
-                        </li>
-                    </ul>
-                    <ul id="table-participants" class="participants-list list-group">
-                    {% for participant in tripDetail.participants %}
-                        <li class="list-group-item d-flex">
-                            <div class="col-6">
-                                {{ participant.username }}
-                            </div>
-                            <div class="col-6">
-                                {{ participant.firstName }} {{ participant.lastName }}
-                            </div>
-                        </li>
-                    {% endfor %}
-                    </ul>
+                    {% if tripDetail.participants is null %}
+                        <h5 class="mb-2 pt-5">Liste des participants</h5>
+                            <ul id="table-head-participants" class="list-group">
+                                <li class="list-group-item d-flex" id="participants-list-head">
+                                    <div class="col-6">
+                                        Pseudo
+                                    </div>
+                                    <div class="col-6">
+                                        Nom
+                                    </div>
+                                </li>
+                            </ul>
+                            <ul id="table-participants" class="participants-list list-group">
+                            {% for participant in tripDetail.participants %}
+                                <li class="list-group-item d-flex">
+                                    <div class="col-6">
+                                        {{ participant.username }}
+                                    </div>
+                                    <div class="col-6">
+                                        {{ participant.firstName }} {{ participant.lastName }}
+                                    </div>
+                                </li>
+                            {% endfor %}
+                            </ul>
+                    {% endif %}
+                    {% if tripDetail.organiser.username == app.user.username %}
+                        <div class="my-4 d-flex justify-content-between">
+                            <a class="btn btn-blue-light col-5" href="{{ path('trip_cancel', {id:tripDetail.id}) }}">Annuler</a>
+                            <a class="btn btn-blue-light col-5" href="{{ path('trip_modify', {id:tripDetail.id}) }}">Modifier</a>
+                        </div>
+                    {% endif %}
                 </div>
 
             </div>
