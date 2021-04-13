@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+{% endblock %}
+
+{% block title %}{{ parent() }} - Annuler{% endblock %}
+
+{% block body %}
+    <section class="container min-vh-100">
+        <h1 class="text-center my-5">Annuler une sortie !</h1>
+        <article class="container-fluid my-4 row d-flex justify-content-center">
+            <div class="d-flex justify-content-between col-7 mt-4">
+                <span>Nom de la sortie : </span><span>{{ trip.name }}</span>
+            </div>
+            <div class="d-flex justify-content-between col-7 mt-4">
+                <span>Date de la sortie : </span><span>{{ trip.dateTimeStart | date('d/m/Y') }}</span>
+            </div>
+            <div class="d-flex justify-content-between col-7 mt-4">
+                <span>Campus : </span><span>{{ trip.organiserCampus.name }}</span>
+            </div>
+            <div class="d-flex justify-content-between col-7 mt-4">
+                <span>Lieu : </span><span>{{ trip.location.name }} {{ trip.location.city.zipCode }} {{ trip.location.city.name }}</span>
+            </div>
+            <div id="form_cancel_trip" class="d-flex justify-content-between col-7 mt-4">
+                {{ form_start(formCancelTrip) }}
+                {{ form_row(formCancelTrip.details) }}
+            </div>
+            <div class="d-flex justify-content-between col-7 mt-4">
+                <a class="btn btn-blue-light col-4" href="{{ path('trip_getDetail', {id:trip.id}) }}">Annuler</a>
+                {{ form_row(formCancelTrip.confirm) }}
+            </div>
+                {{ form_end(formCancelTrip) }}
+        </article>
+    </section>
+{% endblock %}

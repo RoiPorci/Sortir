@@ -10,9 +10,10 @@ a{
 .message-flash {
     height: 56px;
     border-radius: 0px;
+    margin-bottom: 0px;
 }
 
-.custom-file {
+.custom-file, #form_cancel_trip > form {
     width: 100%;
 }
 
@@ -28,10 +29,15 @@ h1, h2, h3, h4, h6, h5, .nav-item, .btn {
 ::-webkit-scrollbar {
     width: 5px;
 }
-::-webkit-scrollbar-track  {
+::-webkit-scrollbar-track,  ::-webkit-scrollbar-button {
     background-color: #18181e;
 }
-::-webkit-scrollbar-thumb, ::-webkit-scrollbar-button {
+
+::-webkit-scrollbar-button {
+    height: 0px;
+}
+
+::-webkit-scrollbar-thumb {
     background-color: #1ED8FF;
 }
 
@@ -64,7 +70,10 @@ h1, h2, h3, h4, h6, h5, .nav-item, .btn {
     font-size: 13px;
 }
 
-.btn-blue-light, #user button, .btn-blue-light-nav, .btn-blue-light-sortie:hover, .btn-blue-light-retour:hover {
+.btn-blue-light, #user button, .btn-blue-light-nav,
+    .btn-blue-light-sortie:hover, .btn-blue-light-retour:hover,
+    #cancel_trip_confirm:hover                                       {
+    border: none;
     background: #1ED8FF;
     color: #fff;
     transition: all 0.5s;
@@ -74,12 +83,14 @@ h1, h2, h3, h4, h6, h5, .nav-item, .btn {
     background: #fff;
     transition: all 0.5s;
     color: #212529;
+    border: none;
 }
 
-.btn-blue-light:hover, #user button:hover, .btn-blue-light-retour {
+.btn-blue-light:hover, #user button:hover, #cancel_trip_confirm, .btn-blue-light-retour {
     background: #212529;
     transition: all 0.5s;
     color: #fff;
+    border: none;
 }
 /* ------------------------------------ NAV ------------------------------------ */
 
@@ -99,7 +110,7 @@ h1, h2, h3, h4, h6, h5, .nav-item, .btn {
     border-radius: 50%;
 }
 
-#user > .form-group, #formTrip .form-group {
+#user > .form-group, #formTrip .form-group, #form_cancel_trip > form > .form-group {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -107,7 +118,7 @@ h1, h2, h3, h4, h6, h5, .nav-item, .btn {
     margin: 10px 0px;
 }
 
-#user > .form-group > label {
+#user > .form-group > label, #form_cancel_trip > form > .form-group > label {
     width: 25%;
 }
 
@@ -137,11 +148,25 @@ select[id='trip_city'] {
     width: 120%;
 }
 
+#form_cancel_trip > .form-group {
+    display: flex;
+}
+
+#form_cancel_trip > form > .form-group {
+    display: flex;
+}
+
+#cancel_trip_details {
+    resize: none;
+    width: 490px;
+    height: 175px;
+}
+
 
 /* ------------------------------------ list ------------------------------------ */
 
 .participants-list{
-    height: 200px;
+    max-height: 200px;
     overflow-y: scroll;
     scrollbar-width: 5px;
     scrollbar-color: #1ED8FF;
@@ -216,7 +241,7 @@ home-trip-title > span:last-child, .home-wording {
 }
 
 #table-participants {
-    border-radius: 0px 0px 5px 5px;
+    border-radius: 0px;
 }
 
 /* ------------------------------------ Profil ------------------------------------ */
