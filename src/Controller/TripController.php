@@ -39,7 +39,7 @@ class TripController extends AbstractController
      * @return Response
      * @throws NonUniqueResultException
      */
-    public function getDetail($id, TripRepository $tripRepository): Response
+    public function getDetail(int $id, TripRepository $tripRepository): Response
     {
         $tripDetail = $tripRepository->findATrip($id);
 
@@ -54,19 +54,18 @@ class TripController extends AbstractController
      * @param EntityManagerInterface $entityManager
      * @return Response
      */
-    public function create(Request $request, EntityManagerInterface $entityManager): Response {
+    public function create(Request $request, EntityManagerInterface $entityManager): Response
+    {
         $trip = new Trip();
         $form = $this->createForm(TripType::class, $trip);
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             $button = $form->getClickedButton()->getName();
-            if ($button == 'create'){
+            if ($button == 'create') {
                 $state = $this->states['created'];
-            }
-            else
-            {
+            } else {
                 $state = $this->states['opened'];
             }
 
@@ -91,60 +90,22 @@ class TripController extends AbstractController
     }
 
     /**
-     * @Route("/register/trip/{id}", name="trip_registerForATrip")
+     * @Route("/modify/{id}", name="trip_modify")
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
      */
-    public function registerForATrip($id,
-                                     TripRepository $tripRepository,
-                                     EntityManagerInterface $entityManager): Response
+    public function modify(int $id, Request $request, TripRepository $tripRepository, EntityManagerInterface $entityManager): Response
     {
-        $user = $this->getUser();
 
-        $tripForRegistration = $tripRepository->findATripForRegister($id);
+        $trip = $tripRepository->findTripWithoutParticipants($id);
+        $form = $this->createForm(TripType::class, $trip);
+        dd($trip);
 
-        $tripState = $tripForRegistration->getState();
-        $tripMaxRegistrationNumber = $tripForRegistration->getMaxRegistrationNumber();
-        $tripParticipants = $tripForRegistration->getParticipants()->toArray();
+        $form->handleRequest($request);
 
-        if (in_array($user, $tripParticipants))
-        {
-            $this->addFlash('danger', 'Vous êtes déjà inscrit!');
-            $userIsRegisteredForTrip = true;
-        } else {
-            $userIsRegisteredForTrip = false;
-        }
-
-        if (!$tripState === $this->states['opened'])
-        {
-            $this->addFlash('danger', 'Désolé, l\'inscription n\'est pas encore ouverte');
-            $tripIsOpened = false;
-        } else {
-            $tripIsOpened = true;
-        }
-
-        if (count($tripParticipants) >= $tripMaxRegistrationNumber)
-        {
-            $this->addFlash('danger', 'Désolé, la sortie est déjà complète');
-            $tripIsFull = true;
-        } else {
-            $tripIsFull = false;
-        }
-
-        if ( !$userIsRegisteredForTrip AND $tripIsOpened AND !$tripIsFull)
-        {
-            $tripForRegistration->addParticipant($user);
-            $entityManager->persist($tripForRegistration);
-            $entityManager->flush();
-            $this->addFlash('success', 'Vous êtes inscrit! ');
-        }
-
-        $tripForRegistration = $tripRepository->findATripForRegister($id);
-        $tripParticipants = $tripForRegistration->getParticipants()->toArray();
-        if (count($tripParticipants) == $tripMaxRegistrationNumber)
-        {
-            dd(count($tripParticipants));
-        }
-        //TODO clôturer la sortie si nb max atteint
-
-        return $this->redirectToRoute('main_home');
+        return $this->render('trip/createTrip.html.twig', [
+            'tripForm' => $form->createView(),
+        ]);
     }
 }

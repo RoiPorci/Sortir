@@ -203,6 +203,35 @@ class TripRepository extends ServiceEntityRepository
         return $result;
     }
 
+    public function findTripWithoutParticipants($id)
+    {
+        $queryBuilder = $this->createQueryBuilder('t');
+
+        $queryBuilder->andWhere('t.id = :id');
+        $queryBuilder->setParameter('id', $id);
+
+        //On ajoute des jointures pour éviter les multiples requêtes par Doctrine
+        $queryBuilder->join('t.organiserCampus', 'c');
+        $queryBuilder->addSelect('c');
+
+        $queryBuilder->join('t.organiser', 'o');
+        $queryBuilder->addSelect('o');
+
+        $queryBuilder->join('t.location', 'l');
+        $queryBuilder->addSelect('l');
+
+        $queryBuilder->join('l.city', 'lc');
+        $queryBuilder->addSelect('lc');
+
+        $queryBuilder->join('t.state', 's');
+        $queryBuilder->addSelect('s');
+
+        $query = $queryBuilder->getQuery();
+        $result = $query->getOneOrNullResult();
+
+        return $result;
+    }
+
     // /**
     //  * @return Trip[] Returns an array of Trip objects
     //  */

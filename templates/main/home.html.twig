@@ -6,7 +6,7 @@
     <script src="{{ asset('js/ajax/registerAndCancelTrip.js') }}"></script>
 {% endblock %}
 
-{% block title %}{{ parent() }}Sortir{% endblock %}
+{% block title %}{{ parent() }}{% endblock %}
 
 {% block body %}
     <div class="container-fluid m-0 p-0 min-vh-100">
@@ -134,7 +134,7 @@
                                     {% if trip.state.wording == 'Créée' %}
                                         <span class="btn btn-blue-light-nav btn-publish" data-id="{{ trip.id }}"><i class="fas fa-upload"></i> Publier</span>
                                     {% endif %}
-                                    <a href="#" class="btn btn-blue-light-nav"><i class="fas fa-pen"></i> Modifier</a>
+                                    <a href="{{ path('trip_modify', {id:trip.id}) }}" class="btn btn-blue-light-nav"><i class="fas fa-pen"></i> Modifier</a>
                                 {% endif %}
                             </div>
                             <div>

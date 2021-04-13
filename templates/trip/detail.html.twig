@@ -4,7 +4,7 @@
     {% if tripDetail is null %}
         sortie non consultable
     {% else %}
-        {{ tripDetail.name }}
+        {{ parent() }} {{ tripDetail.name }}
     {% endif %}
 {% endblock %}
 
