@@ -2,8 +2,7 @@
 
 {% block javascripts %}
     <script src="{{ asset('js/paginations/listTripPagination.js') }}"></script>
-    <script src="{{ asset('js/ajax/publishTrip.js') }}"></script>
-    <script src="{{ asset('js/ajax/registerAndCancelTrip.js') }}"></script>
+    <script src="{{ asset('js/ajax/homeTrip.js') }}"></script>
 {% endblock %}
 
 {% block title %}{{ parent() }}{% endblock %}
@@ -128,20 +127,20 @@
                         <p class="card-text">{{ trip.details }}</p>
                         <div class="d-flex justify-content-between">
 
-                            <div>
+                            <div id="trip-buttons-left-{{ trip.id }}">
                                 {% if trip.state != states.created %}
                                     <a href="{{ path('trip_getDetail', {id:trip.id}) }}" class="btn btn-blue-light-nav"><i class="fas fa-eye"></i> Afficher</a>
                                 {% endif %}
                                 {% if app.user == trip.organiser %}
                                     {% if trip.state == states.created %}
-                                        <span class="btn btn-blue-light-nav btn-publish" data-id="{{ trip.id }}"><i class="fas fa-upload"></i> Publier</span>
-                                        <a href="{{ path('trip_modify', {id:trip.id}) }}" class="btn btn-blue-light-nav"><i class="fas fa-pen"></i> Modifier</a>
+                                        <span class="btn btn-blue-light-nav btn-publish" data-id="{{ trip.id }}" id="trip-span-publish-{{ trip.id }}"><i class="fas fa-upload"></i> Publier</span>
+                                        <a href="{{ path('trip_modify', {id:trip.id}) }}" class="btn btn-blue-light-nav" id="trip-a-modify-{{ trip.id }}"><i class="fas fa-pen"></i> Modifier</a>
                                     {% elseif trip.state == states.opened or trip.state == states.completed %}
                                         <a href="{{ path('trip_cancel', {id:trip.id}) }}" class="btn btn-blue-light-nav"><i class="far fa-window-close"></i> Annuler</a>
                                     {% endif %}
                                 {% endif %}
                             </div>
-                            <div>
+                            <div id="trip-buttons-right-{{ trip.id }}">
                                 {% if trip.dateLimitForRegistration > date() %}
                                     {% if app.user not in trip.participants and trip.state == states.opened %}
                                         <span class="btn btn-blue-light-nav btn-update-participant" data-value="register" data-id="{{ trip.id }}"><i class="fas fa-door-open"></i> S'inscrire</span>
