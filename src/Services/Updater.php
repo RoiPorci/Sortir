@@ -90,15 +90,16 @@ class Updater
     {
         $now = new \DateTime();
 
-        if ($trip->getDateTimeStart() < $now) {
-            $trip->setState($this->states['past']);
+        if ($trip->getDateLimitForRegistration() < $now){
+        $trip->setState($this->states['completed']);
         }
-        elseif ($trip->getDateTimeStart()->modify('+'.$trip->getDuration().' minutes') < $now){
+        if ($trip->getDateTimeStart() < $now) {
             $trip->setState($this->states['ongoing']);
         }
-        elseif ($trip->getDateLimitForRegistration() < $now){
-            $trip->setState($this->states['completed']);
+        if ($trip->getDateTimeStart()->modify('+'.$trip->getDuration().' minutes') < $now){
+            $trip->setState($this->states['past']);
         }
+
 
         return $trip;
     }
