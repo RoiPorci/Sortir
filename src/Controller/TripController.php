@@ -66,8 +66,10 @@ class TripController extends AbstractController
             $button = $form->getClickedButton()->getName();
             if ($button == 'create') {
                 $state = $this->states['created'];
+                $flashMessage = 'Votre sortie a bien été créée';
             } else {
                 $state = $this->states['opened'];
+                $flashMessage = 'Votre sortie a bien été publiée';
             }
 
             $user = $this->getUser();
@@ -78,6 +80,8 @@ class TripController extends AbstractController
 
             $entityManager->persist($trip);
             $entityManager->flush();
+
+            $this->addFlash('success', $flashMessage);
 
             return $this->redirectToRoute('trip_getDetail', ['id' => $trip->getId()]);
         }
@@ -111,15 +115,18 @@ class TripController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $flashMessage = 'Votre sortie a bien été modifiée';
+
             $button = $form->getClickedButton()->getName();
             if ($button == 'opened') {
                 $trip->setState($this->states['opened']);
+                $flashMessage = 'Votre sortie a bien été modifiée et publiée';
             }
 
             $entityManager->persist($trip);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Votre sortie a bien été modifiée');
+            $this->addFlash('success', $flashMessage);
 
             return $this->redirectToRoute('trip_getDetail', ['id' => $trip->getId()]);
         }
