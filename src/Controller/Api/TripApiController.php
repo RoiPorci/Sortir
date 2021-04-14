@@ -134,7 +134,6 @@ class TripApiController extends AbstractController
         $tripForCancel = $tripRepository->findATripForRegister($id);
         $isCanceled = false;
 
-        $tripState = $tripForCancel->getState()->getWording();
         $tripMaxRegistrationNumber = $tripForCancel->getMaxRegistrationNumber();
         $tripParticipants = $tripForCancel->getParticipants()->toArray();
 
