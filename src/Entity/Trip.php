@@ -149,7 +149,7 @@ class Trip
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(?string $name): self
     {
         $this->name = $name;
 
@@ -197,7 +197,7 @@ class Trip
         return $this->maxRegistrationNumber;
     }
 
-    public function setMaxRegistrationNumber(int $maxRegistrationNumber): self
+    public function setMaxRegistrationNumber(?int $maxRegistrationNumber): self
     {
         $this->maxRegistrationNumber = $maxRegistrationNumber;
 
@@ -209,7 +209,7 @@ class Trip
         return $this->details;
     }
 
-    public function setDetails(string $details): self
+    public function setDetails(?string $details): self
     {
         $this->details = $details;
 

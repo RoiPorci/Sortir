@@ -59,7 +59,7 @@ class ListTripType extends AbstractType
                 'mapped' => false,
             ])
             ->add('past', CheckboxType::class, [
-                'label' => "Sorties passées",
+                'label' => "Sorties passées et en cours",
                 'required' => false,
                 'mapped' => false,
             ])
