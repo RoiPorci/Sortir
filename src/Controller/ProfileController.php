@@ -84,17 +84,17 @@ class ProfileController extends AbstractController
             $manager->refresh($this->getUser());
         }
 
-        return $this->render('updateProfile.html.twig', [
-            'profilForm' => $form->createView(),
+        return $this->render('profil/updateProfile.html.twig', [
+            'profileForm' => $form->createView(),
         ]);
     }
 
     /**
      * @Route("/profil/{id}", name="profil_show", requirements={"id"="\d+"})
      */
-    public function showProfil(int $id, UserRepository $userRepository) {
+    public function showProfile(int $id, UserRepository $userRepository) {
 
-        return $this->render('showProfile.html.twig', [
+        return $this->render('profil/showProfile.html.twig', [
             'user' => $userRepository->find($id)
         ]);
     }
