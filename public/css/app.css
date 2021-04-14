@@ -23,6 +23,11 @@ h1, h2, h3, h4, h6, h5, .nav-item, .btn {
     letter-spacing: 1.2px;
 }
 
+.form-check-input:checked {
+    background: #23c4f0;
+    border-color: #23c4f0;
+}
+
 /* ------------------------------------ Scrollbar ------------------------------------ */
 
 /* --- Sous Chrome --- */
@@ -38,14 +43,14 @@ h1, h2, h3, h4, h6, h5, .nav-item, .btn {
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: #1ED8FF;
+    background-color: #23c4f0;
 }
 
 /* --- Sous Firefox --- */
 
 * {
     scrollbar-width: thin;
-    scrollbar-color: #1ED8FF #18181e;
+    scrollbar-color: #23c4f0 #18181e;
 }
 
 
@@ -56,12 +61,46 @@ h1, h2, h3, h4, h6, h5, .nav-item, .btn {
     transition: all 0.5s;
 }
 .link-blue-light:hover{
-    color: #1ED8FF;
+    color: #23c4f0;
     transition: all 0.5s;
 }
 
 .text-blue-light{
-    color: #1ED8FF;
+    color: #23c4f0;
+}
+
+/* ------------------------------------ FENETRE MODAL & MESSAGE FLASH -------------------------------------- */
+
+.modal-body {
+    background: #212529;
+    color: #fff;
+}
+
+.btn-close {
+    opacity: 1;
+}
+
+.message-flash > p {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.alert-success {
+    color: #ffffff;
+    background-color: #26c92d;
+    border-color: #26c92d;
+}
+
+.alert-danger {
+    color: #FFFFFF;
+    background: #cf0101;
+    border-color: #cf0101;
+}
+
+.alert-warning {
+    color: #fff;
+    background: #ff9900;
+    border-color: #ff9900;
 }
 
 /* ------------------------------------ Buttons ------------------------------------ */
@@ -72,9 +111,9 @@ h1, h2, h3, h4, h6, h5, .nav-item, .btn {
 
 .btn-blue-light, #user button, .btn-blue-light-nav,
     .btn-blue-light-sortie:hover, .btn-blue-light-retour:hover,
-    #cancel_trip_confirm:hover                                       {
+    #cancel_trip_confirm:hover, #trip_create, #trip_publish         {
     border: none;
-    background: #1ED8FF;
+    background: #23c4f0;
     color: #fff;
     transition: all 0.5s;
 }
@@ -86,11 +125,21 @@ h1, h2, h3, h4, h6, h5, .nav-item, .btn {
     border: none;
 }
 
-.btn-blue-light:hover, #user button:hover, #cancel_trip_confirm, .btn-blue-light-retour {
+.btn-blue-light:hover, #user button:hover, #cancel_trip_confirm,
+.btn-blue-light-retour, #trip_create:hover, #trip_publish:hover {
     background: #212529;
     transition: all 0.5s;
     color: #fff;
     border: none;
+}
+
+.trip_buttons > div > .form-group > button {
+    width: 85%;
+    padding: 15px 0px;
+}
+
+.trip_buttons .btn-blue-light-retour {
+    padding: 15px 0px;
 }
 /* ------------------------------------ NAV ------------------------------------ */
 
@@ -144,7 +193,7 @@ form .form-error-icon{
     height: 150px;
     resize: none;
     scrollbar-width: 5px;
-    scrollbar-color: #1ED8FF;
+    scrollbar-color: #23c4f0;
 }
 
 select[id='trip_city'], select[id='trip_organiserCampus'], select[id='trip_location'] {
@@ -168,7 +217,7 @@ select[id='trip_city'], select[id='trip_organiserCampus'], select[id='trip_locat
     max-height: 200px;
     overflow-y: scroll;
     scrollbar-width: 5px;
-    scrollbar-color: #1ED8FF;
+    scrollbar-color: #23c4f0;
 }
 
 .participants-list::-webkit-scrollbar, textarea::-webkit-scrollbar{
@@ -176,7 +225,7 @@ select[id='trip_city'], select[id='trip_organiserCampus'], select[id='trip_locat
 }
 
 .participants-list::-webkit-scrollbar-thumb, textarea::-webkit-scrollbar-thumb{
-    background-color: #1ED8FF;
+    background-color: #23c4f0;
 }
 
 #participants-list-head{
@@ -199,16 +248,16 @@ select[id='trip_city'], select[id='trip_organiserCampus'], select[id='trip_locat
 
 .home-trip-subtitle {
     font-size: 12px;
-    color: #AAAAAA;
+    color: #aeaeae;
 }
 
 .home-trip-subtitle > span > a {
-    color: #1ED8FF;
+    color: #23c4f0;
     transition: all 0.3s;
 }
 
 .home-trip-subtitle > span > a:hover {
-    color: #AAAAAA;
+    color: #aeaeae;
     transition: all 0.3s;
 }
 
@@ -217,7 +266,7 @@ home-trip-title > span:last-child, .home-wording {
 }
 
 .input-group-text {
-    background: #23D9FF;
+    background: #23c4f0;
     border: none;
     color: #fff;
     border: 1px solid #ced4da;
@@ -238,13 +287,13 @@ home-trip-title > span:last-child, .home-wording {
 
 .pagination > .page-item > .page-link {
     background: #212529;
-    color: #1ED8FF;
+    color: #23c4f0;
     border-color: #fff;
     transition: all 0.5s;
 }
 
 .pagination > .page-item > .page-link:hover {
-    background: #1ED8FF;
+    background: #23c4f0;
     color: #212529;
     transition: all 0.5s;
 }
@@ -267,7 +316,7 @@ home-trip-title > span:last-child, .home-wording {
 #table-participants > a:hover > li, #trip_organisateur > a:hover > li {
     background: #212529;
     border: 1px solid transparent;
-    color: #1ED8FF;
+    color: #23c4f0;
     transition: all 0.5s;
 }
 
