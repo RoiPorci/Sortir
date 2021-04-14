@@ -11,7 +11,7 @@
                 {% if user.pictureFileName %}
                 <img class="col-12" src="{{ asset('img/profile/small/'~user.pictureFileName ) }}">
                 {% else %}
-                <img class="col-12" src="https://zupimages.net/up/21/14/2yq6.jpg">
+                <img class="col-12" src="{{ asset('img/default_img.jpg') }}">
                 {% endif %}
             </article>
             <article class="col-md-6 col-12">
