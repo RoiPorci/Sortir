@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\String\ByteString;
 
-class ProfilController extends AbstractController
+class ProfileController extends AbstractController
 {
     /**
      * @Route("/profil/modifier", name="profil_updatedProfil" )
@@ -32,12 +32,14 @@ class ProfilController extends AbstractController
 
             $user->setDateUpdated(new \DateTime());
 
+            //Modification du mot de passe si nécessaire
             $password = $form->get('password')->getData();
 
             if($password){
                 $user->setPassword($encoder->encodePassword($user, $password));
             }
 
+            //Modification de la photo de profil si nécessaire
              /** @var UploadedFile $uploadedFile */
             $uploadedFile = $form->get('picture')->getData();
 
@@ -70,14 +72,15 @@ class ProfilController extends AbstractController
             }
 
             $manager->persist($user);
-
             $manager->flush();
 
             $this->addFlash('success', 'Profil modifié ! ');
 
+            //Redirection
             return $this->redirectToRoute('profil_show', ['id' => $user->getId()]);
         }
         else {
+            //Raffraîchissment de l'utilisateur connecté manuel pour éviter une déconnexion
             $manager->refresh($this->getUser());
         }
 

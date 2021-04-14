@@ -27,8 +27,13 @@ class TripRepository extends ServiceEntityRepository
     /**
      * @param array|null $filter
      * @param User $user
+     * @param int $page
+     * @param int $maxResults
+     * @return array
+     * @throws NoResultException
+     * @throws NonUniqueResultException
      */
-    public function findTripsFiltered(?array $filter, User $user, $page = 1, $maxResults)
+    public function findAllFiltered(?array $filter, User $user, int $page = 1, int $maxResults): array
     {
         $queryBuilder = $this->createQueryBuilder('t');
 
@@ -84,6 +89,7 @@ class TripRepository extends ServiceEntityRepository
             $queryBuilder->setParameter(':now', new \DateTime());
         }
 
+        //Non archivées
         $now = new \DateTime();
         $dateArchived = $now->modify('-1 month');
 
@@ -134,13 +140,14 @@ class TripRepository extends ServiceEntityRepository
      * @return int|mixed|string|null
      * @throws NonUniqueResultException
      */
-    public function findATrip($id)
+    public function findNotArchived($id)
     {
         $queryBuilder = $this->createQueryBuilder('t');
 
         $queryBuilder->andWhere('t.id = :id');
         $queryBuilder->setParameter('id', $id);
 
+        //Non archivée
         $now = new \DateTime();
         $dateArchived = $now->modify('-1 month');
 
@@ -169,10 +176,14 @@ class TripRepository extends ServiceEntityRepository
         return $result;
     }
 
+    /**
+     * @return int|mixed|string
+     */
     public function findAllNotArchived()
     {
         $queryBuilder = $this->createQueryBuilder('t');
 
+        //Non archivées
         $now = new \DateTime();
         $dateArchived = $now->modify('-1 month');
 
@@ -184,12 +195,24 @@ class TripRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
-    public function findATripForRegister($id)
+    /**
+     * @param $id
+     * @return int|mixed|string|null
+     * @throws NonUniqueResultException
+     */
+    public function findWithStateAndParticipants($id)
     {
         $queryBuilder = $this->createQueryBuilder('t');
 
         $queryBuilder->andWhere('t.id = :id');
         $queryBuilder->setParameter('id', $id);
+
+        //Non archivée
+        $now = new \DateTime();
+        $dateArchived = $now->modify('-1 month');
+
+        $queryBuilder->andWhere('t.dateTimeStart > :dateArchived');
+        $queryBuilder->setParameter(':dateArchived', $dateArchived);
 
         //On ajoute des jointures pour éviter les multiples requêtes par Doctrine
         $queryBuilder->join('t.state', 's');
@@ -204,7 +227,13 @@ class TripRepository extends ServiceEntityRepository
         return $result;
     }
 
-    public function findTripWithoutParticipants(int $id, UserInterface $organiser)
+    /**
+     * @param int $id
+     * @param UserInterface $organiser
+     * @return int|mixed|string|null
+     * @throws NonUniqueResultException
+     */
+    public function findWithoutParticipants(int $id, UserInterface $organiser)
     {
         $queryBuilder = $this->createQueryBuilder('t');
 
@@ -213,6 +242,13 @@ class TripRepository extends ServiceEntityRepository
 
         $queryBuilder->andWhere('t.organiser = :organiser');
         $queryBuilder->setParameter('organiser', $organiser);
+
+        //Non archivée
+        $now = new \DateTime();
+        $dateArchived = $now->modify('-1 month');
+
+        $queryBuilder->andWhere('t.dateTimeStart > :dateArchived');
+        $queryBuilder->setParameter(':dateArchived', $dateArchived);
 
         //On ajoute des jointures pour éviter les multiples requêtes par Doctrine
         $queryBuilder->join('t.organiserCampus', 'c');
@@ -236,32 +272,4 @@ class TripRepository extends ServiceEntityRepository
         return $result;
     }
 
-    // /**
-    //  * @return Trip[] Returns an array of Trip objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Trip
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

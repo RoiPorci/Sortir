@@ -6,7 +6,6 @@ use App\Entity\Trip;
 use App\Entity\User;
 use App\Form\CancelTripType;
 use App\Form\TripType;
-use App\Repository\CampusRepository;
 use App\Repository\StateRepository;
 use App\Repository\TripRepository;
 use App\Services\Updater;
@@ -16,7 +15,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 class TripController extends AbstractController
 {
@@ -42,7 +40,7 @@ class TripController extends AbstractController
      */
     public function getDetail(int $id, TripRepository $tripRepository): Response
     {
-        $tripDetail = $tripRepository->findATrip($id);
+        $tripDetail = $tripRepository->findNotArchived($id);
 
         return $this->render('trip/detail.html.twig', [
             'tripDetail' => $tripDetail,
@@ -64,6 +62,8 @@ class TripController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            //Définition du bouton qui a permis l'envoi du formulaire
             $button = $form->getClickedButton()->getName();
             if ($button == 'create') {
                 $state = $this->states['created'];
@@ -75,6 +75,7 @@ class TripController extends AbstractController
 
             $user = $this->getUser();
 
+            //Traitement
             $trip->setState($state);
             $trip->setOrganiser($user);
             $trip->setOrganiserCampus($user->getCampus());
@@ -84,6 +85,7 @@ class TripController extends AbstractController
 
             $this->addFlash('success', $flashMessage);
 
+            //Redirection
             return $this->redirectToRoute('trip_getDetail', ['id' => $trip->getId()]);
         }
 
@@ -97,15 +99,18 @@ class TripController extends AbstractController
 
     /**
      * @Route("/modify-{id}", name="trip_modify")
+     * @param int $id
      * @param Request $request
-     * @param EntityManagerInterface $entityManager
+     * @param TripRepository $tripRepository
+     * @param EntityManagerInterface $manager
      * @return Response
      */
-    public function modify(int $id, Request $request, TripRepository $tripRepository, EntityManagerInterface $entityManager): Response
+    public function modify(int $id, Request $request, TripRepository $tripRepository, EntityManagerInterface $manager): Response
     {
         $user = $this->getUser();
-        $trip = $tripRepository->findTripWithoutParticipants($id, $user);
+        $trip = $tripRepository->findWithoutParticipants($id, $user);
 
+        //Interdiction de la modification de la sortie si celle-ci n'est pas ouverte
         if ($this->states['created'] !== $trip->getState()){
             $this->addFlash('danger', 'Vous ne pouvez plus modifier cette sortie!');
             return $this->redirectToRoute('main_home');
@@ -118,17 +123,19 @@ class TripController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $flashMessage = 'Votre sortie a bien été modifiée';
 
+            //Définition du bouton qui a permis l'envoi du formulaire
             $button = $form->getClickedButton()->getName();
             if ($button == 'opened') {
                 $trip->setState($this->states['opened']);
                 $flashMessage = 'Votre sortie a bien été modifiée et publiée';
             }
 
-            $entityManager->persist($trip);
-            $entityManager->flush();
+            $manager->persist($trip);
+            $manager->flush();
 
             $this->addFlash('success', $flashMessage);
 
+            //Redirection
             return $this->redirectToRoute('trip_getDetail', ['id' => $trip->getId()]);
         }
 
@@ -144,17 +151,22 @@ class TripController extends AbstractController
 
     /**
      * @Route("trip/cancel/{id}", name="trip_cancel", requirements={"id"="\d+"})
-     * @param $id
+     * @param int $id
      * @param Request $request
-     * @param EntityManagerInterface $entityManager
+     * @param TripRepository $tripRepository
+     * @param StateRepository $stateRepository
+     * @param EntityManagerInterface $manager
      * @return Response
+     * @throws NonUniqueResultException
      */
-    public function cancelTrip(int $id, Request $request, TripRepository $tripRepository, StateRepository $stateRepository, EntityManagerInterface $entityManager) {
+    public function cancelTrip(int $id, Request $request, TripRepository $tripRepository, StateRepository $stateRepository, EntityManagerInterface $manager): Response
+    {
 
         /** @var User $user */
         $user = $this->getUser();
-        $trip = $tripRepository->findATrip($id);
+        $trip = $tripRepository->findNotArchived($id);
 
+        //Vérification de l'existence de la sortie
         if (!$trip) {
             $this->addFlash('warning', "Cette sortie n'existe pas !");
             return $this->redirectToRoute('main_home' );
@@ -165,6 +177,7 @@ class TripController extends AbstractController
         $now = new \DateTime();
         $oldDetailTrip = $trip->getDetails();
 
+        //Vérification de la possibilté d'annulation
         if ($trip->getOrganiser() !== $user
             || $trip->getDateTimeStart() < $now
             || $tripState == $this->states['canceled']
@@ -176,6 +189,7 @@ class TripController extends AbstractController
 
         $form->handleRequest($request);
 
+        //Traitement
         if ($form->isSubmitted() && $form->isValid()) {
             $cancelDetailTrip = $form['details']->getData();
             $text_cancel = $oldDetailTrip ." Motif d'annulation : " .$cancelDetailTrip;
@@ -184,8 +198,8 @@ class TripController extends AbstractController
             $state = $stateRepository->findBy(['wording'=> 'Annulée'])[0];
             $trip->setState($state);
 
-            $entityManager->persist($trip);
-            $entityManager->flush();
+            $manager->persist($trip);
+            $manager->flush();
 
             $this->addFlash('success', 'Votre sortie a été annulée');
             return $this->redirectToRoute('trip_getDetail', ['id' => $trip->getId()]);

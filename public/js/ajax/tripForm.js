@@ -6,19 +6,21 @@ function init(event){
     let selectCity = document.getElementById('trip_city');
     let selectLocation = document.getElementById('trip_location');
 
-    selectCity.addEventListener('change', loadLocations);
-    selectLocation.addEventListener('change', setLocationDetails);
+    selectCity.addEventListener('change', changeLocations);
+    selectLocation.addEventListener('change', changeLocationDetails);
 
     if (selectLocation.value !== ''){
-        loadCity().then( () => {
-            showLocationDetails();
-        });
+        showLocationDetails();
     }
     else{
        cleanLocationOptions();
     }
 }
 
+/**
+ * loads the selected city with its locations in var city
+ * @returns {Promise<unknown>}
+ */
 function loadCity(){
     let selectCity = document.getElementById('trip_city');
     let cityId = selectCity.value;
@@ -35,7 +37,10 @@ function loadCity(){
     })
 }
 
-function loadLocations(){
+/**
+ * changes the locations options related to var city and displays its zip code
+ */
+function changeLocations(){
     let selectCity = document.getElementById('trip_city');
 
     if (selectCity.value !== ''){
@@ -51,6 +56,10 @@ function loadLocations(){
     }
 }
 
+/**
+ * creates new location options from the list in parameter
+ * @param locations
+ */
 function createLocationsOption(locations){
     let selectLocation = document.getElementById('trip_location');
 
@@ -67,10 +76,28 @@ function createLocationsOption(locations){
         selectLocation.insertAdjacentElement('beforeend', option);
     });
 
-    setLocationDetails();
+    changeLocationDetails();
     showLocationDetails();
 }
 
+/**
+ * displays the selected location infos and
+ * loads the selected city in var city if it's empty
+ */
+function changeLocationDetails(){
+    if (city){
+        setLocationDetails();
+    }
+    else {
+        loadCity().then( () => {
+            setLocationDetails();
+        });
+    }
+}
+
+/**
+ * displays the selected location infos
+ */
 function setLocationDetails(){
     let selectLocation = document.getElementById('trip_location');
     let spanStreet = document.getElementById('street');
@@ -93,6 +120,9 @@ function setLocationDetails(){
     }
 }
 
+/**
+ * shows the location details
+ */
 function showLocationDetails(){
     let selectLocation = document.getElementById('trip_location');
     let divLocation = document.getElementById('location-infos');
@@ -102,6 +132,9 @@ function showLocationDetails(){
     divLocation.setAttribute('style', 'visibility: visible');
 }
 
+/**
+ * hides the location details and empties the location options
+ */
 function cleanLocationOptions(){
     let selectLocation = document.getElementById('trip_location');
     let divLocation = document.getElementById('location-infos');

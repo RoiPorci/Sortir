@@ -2,7 +2,6 @@
 
 namespace App\Controller\Api;
 
-use App\Repository\StateRepository;
 use App\Repository\TripRepository;
 use App\Services\Updater;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,9 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TripApiController extends AbstractController
 {
-    /**
-     * @var Updater
-     */
+    /** @var Updater */
     private Updater $updater;
 
     private array $states;
@@ -25,9 +22,6 @@ class TripApiController extends AbstractController
         $this->updater = $updater;
         $this->states = $this->updater->states;
     }
-
-    const OUVERTE = 'Ouverte';
-
 
     /**
      * @Route("/api/trip/publish/{id}", name="api_trip_api", requirements={"id": "\d+"})
@@ -43,10 +37,10 @@ class TripApiController extends AbstractController
         $trip = $tripRepository->findBy(['organiser' => $user, 'id' => $id])[0];
         $isPublished = false;
 
-        if ($trip){
-
-            if ($trip->getState() == $this->states['created']){
-
+        if ($trip)
+        {
+            if ($trip->getState() == $this->states['created'])
+            {
                 $trip->setState($this->states['opened']);
 
                 $manager->persist($trip);
@@ -63,110 +57,107 @@ class TripApiController extends AbstractController
      * @Route("/api/trip/register-user/{id}", name="api_trip_registerForATrip", requirements={"id": "\d+"})
      * @param int $id
      * @param TripRepository $tripRepository
-     * @param EntityManagerInterface $entityManager
+     * @param EntityManagerInterface $manager
      * @return Response
      */
-    public function registerForATrip(
-        int $id,
-        TripRepository $tripRepository,
-        EntityManagerInterface $entityManager
-        ): Response
+    public function registerForATrip(int $id, TripRepository $tripRepository, EntityManagerInterface $manager): Response
     {
         $user = $this->getUser();
-        $tripForRegistration = $tripRepository->findATripForRegister($id);
+        $trip = $tripRepository->findWithStateAndParticipants($id);
         $isRegistered = false;
 
-        $tripState = $tripForRegistration->getState();
-        $tripMaxRegistrationNumber = $tripForRegistration->getMaxRegistrationNumber();
-        $tripParticipants = $tripForRegistration->getParticipants()->toArray();
-        $tripLimitDate = $tripForRegistration->getDateLimitForRegistration();
+        //Infos de la sortie
+        $tripState = $trip->getState();
+        $tripMaxRegistrationNumber = $trip->getMaxRegistrationNumber();
+        $tripParticipants = $trip->getParticipants()->toArray();
+        $tripLimitDate = $trip->getDateLimitForRegistration();
 
         $now = new \DateTime();
 
+        //Traitement
         if ( !in_array($user, $tripParticipants)
             && $tripState === $this->states['opened']
             && count($tripParticipants) < $tripMaxRegistrationNumber
             && $tripLimitDate > $now)
         {
-            $tripForRegistration->addParticipant($user);
-            $entityManager->persist($tripForRegistration);
-            $entityManager->flush();
+            $trip->addParticipant($user);
+            $manager->persist($trip);
+            $manager->flush();
 
             $isRegistered = true;
         }
 
-        $tripForRegistration = $tripRepository->findATripForRegister($id);
-        $tripParticipants = $tripForRegistration->getParticipants()->toArray();
+        //Revérification du nombre de participants après ajout
+        $trip = $tripRepository->findWithStateAndParticipants($id);
+        $tripParticipants = $trip->getParticipants()->toArray();
         $tripParticipantsNumber = count($tripParticipants);
 
         $isCompleted = false;
 
         if ($tripParticipantsNumber == $tripMaxRegistrationNumber)
         {
-            $tripForRegistration->setState($this->states['completed']);
+            $trip->setState($this->states['completed']);
 
-            $entityManager->persist($tripForRegistration);
-            $entityManager->flush();
+            $manager->persist($trip);
+            $manager->flush();
 
             $isCompleted = true;
         }
 
         return new JsonResponse(['isRegistered' => $isRegistered,
                                 'tripParticipantsNumber' => $tripParticipantsNumber,
-                                'isCompleted' => $isCompleted]);
-
+                                'isCompleted' => $isCompleted]
+        );
     }
 
     /**
      * @Route("/api/trip/cancel-user/{id}", name="api_trip_cancelForATrip", requirements={"id": "\d+"})
      * @param int $id
      * @param TripRepository $tripRepository
-     * @param EntityManagerInterface $entityManager
+     * @param EntityManagerInterface $manager
      * @return Response
      */
-    public function cancelForATrip(
-        int $id,
-        TripRepository $tripRepository,
-        EntityManagerInterface $entityManager
-        ): Response
+    public function cancelForATrip(int $id, TripRepository $tripRepository, EntityManagerInterface $manager): Response
     {
         $user = $this->getUser();
-        $tripForCancel = $tripRepository->findATripForRegister($id);
+        $trip = $tripRepository->findWithStateAndParticipants($id);
         $isCanceled = false;
 
-        $tripMaxRegistrationNumber = $tripForCancel->getMaxRegistrationNumber();
-        $tripParticipants = $tripForCancel->getParticipants()->toArray();
+        //Infos de la sortie
+        $tripMaxRegistrationNumber = $trip->getMaxRegistrationNumber();
+        $tripParticipants = $trip->getParticipants()->toArray();
         $now = new \DateTime();
 
-        if ( in_array($user, $tripParticipants) && $tripForCancel->getDateLimitForRegistration() > $now )
+        //Traitement
+        if ( in_array($user, $tripParticipants) && $trip->getDateLimitForRegistration() > $now )
         {
-            $tripForCancel->removeParticipant($user);
-            $entityManager->persist($tripForCancel);
-            $entityManager->flush();
+            $trip->removeParticipant($user);
+            $manager->persist($trip);
+            $manager->flush();
 
             $isCanceled = true;
         }
 
-        $tripForCancel = $tripRepository->findATripForRegister($id);
-        $tripParticipants = $tripForCancel->getParticipants()->toArray();
+        //Revérification du nombre de participants après suppression
+        $trip = $tripRepository->findWithStateAndParticipants($id);
+        $tripParticipants = $trip->getParticipants()->toArray();
         $tripParticipantsNumber = count($tripParticipants);
 
         $isOpened = false;
 
         if ($tripParticipantsNumber < $tripMaxRegistrationNumber)
         {
-            $tripForCancel->setState($this->states['opened']);
+            $trip->setState($this->states['opened']);
 
-            $entityManager->persist($tripForCancel);
-            $entityManager->flush();
+            $manager->persist($trip);
+            $manager->flush();
 
             $isOpened = true;
         }
 
         return new JsonResponse(['isCanceled' => $isCanceled,
             'tripParticipantsNumber' => $tripParticipantsNumber,
-            'isOpened' => $isOpened]);
-
+            'isOpened' => $isOpened]
+        );
     }
-    
 }

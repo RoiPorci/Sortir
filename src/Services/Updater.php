@@ -33,6 +33,9 @@ class Updater
         $this->states = $this->getAllStates();
     }
 
+    /**
+     * @return array
+     */
     public function getAllStates(): array
     {
         $statesDb = $this->stateRepository->findAll();
@@ -67,6 +70,9 @@ class Updater
         return $statesOrganized;
     }
 
+    /**
+     * @return int|mixed|string
+     */
     public function updateTripsState()
     {
         $trips = $this->tripRepository->findAllNotArchived();
@@ -82,7 +88,7 @@ class Updater
     }
 
     /**
-     * redefine the state of a trip based on its dateTimeStart, duration and dateLimitForRegistration
+     * redefines the state of a trip based on its dateTimeStart, duration and dateLimitForRegistration
      * @param Trip $trip
      * @return Trip
      */

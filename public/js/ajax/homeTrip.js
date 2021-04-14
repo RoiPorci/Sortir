@@ -3,6 +3,7 @@ window.addEventListener('load', init);
 var currentUrl;
 
 function init(event){
+    //Récupération de l'url de manière dynamique
     let currentUrlFull = window.location.href;
     let urlFull = currentUrlFull.split('?');
     currentUrl = urlFull[0];
@@ -15,17 +16,23 @@ function init(event){
     });
 
     btnsUpdate.forEach( (btnUpdate) => {
-        btnUpdate.addEventListener('click', updateAUserOnTrip);
+        btnUpdate.addEventListener('click', updateUserOnTrip);
 
     });
 }
 
-function updateAUserOnTrip(event){
+/**
+ * updates the registration of the participant authenticated on the trip
+ * depending on the value of the update button (register or cancel)
+ * @param event
+ */
+function updateUserOnTrip(event){
     let btnUpdate = event.currentTarget;
     let tripId = btnUpdate.dataset.id;
     let spanState = document.getElementById('trip-state-wording-' + tripId);
     let spanRegisteredNumber = document.getElementById('trip-participants-lenght-' + tripId);
 
+    //Inscription
     if (btnUpdate.dataset.value == "register") {
         let url = "api/trip/register-user/" + tripId;
 
@@ -54,8 +61,9 @@ function updateAUserOnTrip(event){
             .catch(() => {
                 sendInfoModal('Echec', "Une erreur avec le serveur est survenue!", 'danger');
             })
-
-    } else if (btnUpdate.dataset.value == "cancel") {
+    }
+    //Désistement
+    else if (btnUpdate.dataset.value == "cancel") {
         let url = "api/trip/cancel-user/" + tripId;
 
         fetch(url, {method: 'POST'})
@@ -86,6 +94,11 @@ function updateAUserOnTrip(event){
     }
 
 }
+
+/**
+ * publishes a trip (from state created to published)
+ * @param event
+ */
 function publishTrip(event){
     let btnPublish = event.currentTarget;
     let tripId = btnPublish.dataset.id;
@@ -112,6 +125,10 @@ function publishTrip(event){
         })
 }
 
+/**
+ * add display, cancel and register to the trip's card AND removes publish and modify AND sate -> Opened
+ * @param tripId
+ */
 function modifyBtnsOnPublication(tripId){
     let spanState = document.getElementById('trip-state-wording-' + tripId);
     let btnPublish = document.getElementById('trip-span-publish-' + tripId);
@@ -131,6 +148,10 @@ function modifyBtnsOnPublication(tripId){
 
 }
 
+/**
+ * add the display button for a trip
+ * @param tripId
+ */
 function addButtonDisplay(tripId){
     let divBtnsLeft = document.getElementById('trip-buttons-left-' + tripId);
     let btnDisplay = document.createElement('a');
@@ -146,6 +167,10 @@ function addButtonDisplay(tripId){
     divBtnsLeft.insertAdjacentElement('afterbegin', btnDisplay);
 }
 
+/**
+ * add the cancel button for a trip
+ * @param tripId
+ */
 function addButtonCancel(tripId){
     let divBtnsLeft = document.getElementById('trip-buttons-left-' + tripId);
     let btnCancel = document.createElement('a');
@@ -161,6 +186,10 @@ function addButtonCancel(tripId){
     divBtnsLeft.insertAdjacentElement('beforeend', btnCancel);
 }
 
+/**
+ * add the register button for a trip with its event
+ * @param tripId
+ */
 function addButtonRegister(tripId){
     let divBtnsRight = document.getElementById('trip-buttons-right-' + tripId);
     let btnRegister = document.createElement('span');
@@ -173,7 +202,7 @@ function addButtonRegister(tripId){
     btnRegister.insertAdjacentElement('afterbegin', icon);
     btnRegister.dataset.value = 'register';
     btnRegister.dataset.id = tripId;
-    btnRegister.addEventListener('click', updateAUserOnTrip);
+    btnRegister.addEventListener('click', updateUserOnTrip);
 
     divBtnsRight.insertAdjacentElement('beforeend', btnRegister);
 }

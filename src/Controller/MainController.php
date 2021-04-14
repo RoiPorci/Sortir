@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\ListTripType;
-
 use App\Repository\TripRepository;
 use App\Services\Updater;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,6 +15,7 @@ class MainController extends AbstractController
 {
     /** @var Updater */
     private Updater $updater;
+
     private array $states;
 
     public function __construct(Updater $updater)
@@ -58,7 +58,7 @@ class MainController extends AbstractController
         }
 
         //Appel à la bdd
-        $results = $tripRepository->findTripsFiltered($filterParams, $user, $page, $maxResults);
+        $results = $tripRepository->findAllFiltered($filterParams, $user, $page, $maxResults);
 
         //Liste des Sorties
         $trips = $results['trips'];

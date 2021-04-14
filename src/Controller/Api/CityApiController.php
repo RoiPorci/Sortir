@@ -3,7 +3,6 @@
 namespace App\Controller\Api;
 
 use App\Repository\CityRepository;
-use App\Repository\LocationRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +20,7 @@ class CityApiController extends AbstractController
      * @param SerializerInterface $serializer
      * @return Response
      */
-    public function getLocationsFromCity(int $id, Request $request, CityRepository $cityRepository, SerializerInterface $serializer): Response
+    public function getCityWithLocations(int $id, Request $request, CityRepository $cityRepository, SerializerInterface $serializer): Response
     {
         $city = $cityRepository->findCityWithLocations($id);
 
