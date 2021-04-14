@@ -85,7 +85,7 @@ class ProfileController extends AbstractController
         }
 
         return $this->render('profil/updateProfile.html.twig', [
-            'profileForm' => $form->createView(),
+            'profilForm' => $form->createView(),
         ]);
     }
 
