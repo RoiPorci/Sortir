@@ -136,8 +136,9 @@ class TripApiController extends AbstractController
 
         $tripMaxRegistrationNumber = $tripForCancel->getMaxRegistrationNumber();
         $tripParticipants = $tripForCancel->getParticipants()->toArray();
+        $now = new \DateTime();
 
-        if ( in_array($user, $tripParticipants) )
+        if ( in_array($user, $tripParticipants) && $tripForCancel->getDateLimitForRegistration() > $now )
         {
             $tripForCancel->removeParticipant($user);
             $entityManager->persist($tripForCancel);

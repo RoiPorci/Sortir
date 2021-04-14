@@ -16,10 +16,12 @@ class MainController extends AbstractController
 {
     /** @var Updater */
     private Updater $updater;
+    private array $states;
 
     public function __construct(Updater $updater)
     {
         $this->updater = $updater;
+        $this->states = $this->updater->states;
     }
 
     /**
@@ -68,6 +70,7 @@ class MainController extends AbstractController
         return $this->render('main/home.html.twig', [
             'filterForm' => $filter->createView(),
             'trips' => $trips,
+            'states' => $this->states,
             'currentPage' => $page,
             'totalTrips' => $totalTrips,
             'totalPages' => $totalPages,
