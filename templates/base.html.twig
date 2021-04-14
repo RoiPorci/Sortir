@@ -60,11 +60,11 @@
         </nav>
     </header>
 
-    <div class="bg-transparent">
-        <div>
+    <div class="container-fluid bg-dark">
+        <div class="container p-4">
             {% for label, messages in app.flashes %}
                 {% for message in messages %}
-                    <div class="message-flash alert alert-{{ label }} text-center" role="alert">
+                    <div class="message-flash alert alert-{{ label }} text-center rounded" role="alert">
                         <p>{{ message }}</p>
                     </div>
                 {% endfor %}

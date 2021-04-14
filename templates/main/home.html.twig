@@ -26,7 +26,6 @@
         <div id="sortir-filtre" class="container-fluid bg-light m-0">
             <div class="container my-4 bg-light">
                 <h3 class="mb-3">Filtrer les sorties</h3>
-
                 {{ form_start(filterForm) }}
                     <div class="row">
                         <div class="col-md-5">
@@ -38,7 +37,6 @@
                                     {{ form_widget(filterForm.campus) }}
                                 </div>
                             </div>
-
                             <div class="row mb-2">
                                 <div class="col-md-2 col-form-label">
                                     {{ form_label(filterForm.name) }}
@@ -50,7 +48,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="row mb-2">
                                 <div class="col-md-1 col-form-label">
                                     Entre
@@ -60,7 +57,6 @@
                                         {{ form_widget(filterForm.dateStart) }}
                                     </div>
                                 </div>
-
                                 <div class="col-md-1 col-form-label">
                                     et
                                 </div>
@@ -71,7 +67,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="col-md-4">
                             <div class="form-check mb-2">
                                 {{ form_widget(filterForm.isOrganiser) }}
@@ -79,21 +74,18 @@
                                     {{ form_label(filterForm.isOrganiser) }}
                                 </div>
                             </div>
-
                             <div class="form-check mb-2">
                                 {{ form_widget(filterForm.isParticipant) }}
                                 <div class="form-check-label">
                                     {{ form_label(filterForm.isParticipant) }}
                                 </div>
                             </div>
-
                             <div class="form-check mb-2">
                                 {{ form_widget(filterForm.isNotParticipant) }}
                                 <div class="form-check-label">
                                     {{ form_label(filterForm.isNotParticipant) }}
                                 </div>
                             </div>
-
                             <div class="form-check mb-2">
                                 {{ form_widget(filterForm.past) }}
                                 <div class="form-check-label">
@@ -101,7 +93,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="col-md-2 row my-2 align-items-center">
                             <button class="btn btn-lg btn-blue-light">Rechercher</button>
                         </div>
@@ -116,36 +107,58 @@
                     <article class="card-body">
                         <div class="home-trip-title card-title d-flex justify-content-between">
                             <h5 class="col-7 text-left">{{ trip.name }}</h5>
-                            <span class="col-2 text-center"> à partir du {{ trip.dateTimeStart|date('d/m/Y') }} à {{ trip.dateTimeStart | date('H:i') }}</span>
-                            <span class="col-2 text-right home-wording">Etat : <span id="trip-state-wording-{{ trip.id }}">{{ trip.state.wording }}</span></span>
+                            <span class="col-2 text-center">
+                                à partir du {{ trip.dateTimeStart|date('d/m/Y') }} à {{ trip.dateTimeStart | date('H:i') }}
+                            </span>
+                            <span class="col-2 text-right home-wording">
+                                Etat : <span id="trip-state-wording-{{ trip.id }}">{{ trip.state.wording }}</span>
+                            </span>
                         </div>
                         <div class="card-subtitle home-trip-subtitle mb-2 d-flex justify-content-between">
-                            <span class="col-7 text-left"><a href="{{ path('profil_show', {id: trip.organiser.id}) }}">Organisateur : {{ trip.organiser.username }}</a></span>
-                            <span class="col-2 text-center">Inscrits : <span id="trip-participants-lenght-{{ trip.id }}">{{ trip.participants|length }}</span>/{{ trip.maxRegistrationNumber }}</span>
-                            <span class="col-2 text-right home-wording">Fin d'inscription le {{ trip.dateLimitForRegistration|date('d/m/Y') }}</span>
+                            <span class="col-7 text-left">
+                                <a href="{{ path('profil_show', {id: trip.organiser.id}) }}">Organisateur : {{ trip.organiser.username }}</a>
+                            </span>
+                            <span class="col-2 text-center">
+                                Inscrits : <span id="trip-participants-lenght-{{ trip.id }}">{{ trip.participants|length }}</span>/{{ trip.maxRegistrationNumber }}
+                            </span>
+                            <span class="col-2 text-right home-wording">
+                                Fin d'inscription le {{ trip.dateLimitForRegistration|date('d/m/Y') }}
+                            </span>
                         </div>
                         <p class="card-text">{{ trip.details }}</p>
                         <div class="d-flex justify-content-between mt-4">
 
                             <div id="trip-buttons-left-{{ trip.id }}">
                                 {% if trip.state != states.created %}
-                                    <a href="{{ path('trip_getDetail', {id:trip.id}) }}" class="btn btn-blue-light-nav"><i class="fas fa-eye"></i> Afficher</a>
+                                    <a href="{{ path('trip_getDetail', {id:trip.id}) }}" class="btn btn-blue-light-nav">
+                                        <i class="fas fa-eye"></i> Afficher
+                                    </a>
                                 {% endif %}
                                 {% if app.user == trip.organiser %}
                                     {% if trip.state == states.created %}
-                                        <span class="btn btn-blue-light-nav btn-publish" data-id="{{ trip.id }}" id="trip-span-publish-{{ trip.id }}"><i class="fas fa-upload"></i> Publier</span>
-                                        <a href="{{ path('trip_modify', {id:trip.id}) }}" class="btn btn-blue-light-nav" id="trip-a-modify-{{ trip.id }}"><i class="fas fa-pen"></i> Modifier</a>
+                                        <span class="btn btn-blue-light-nav btn-publish" data-id="{{ trip.id }}" id="trip-span-publish-{{ trip.id }}">
+                                            <i class="fas fa-upload"></i> Publier
+                                        </span>
+                                        <a href="{{ path('trip_modify', {id:trip.id}) }}" class="btn btn-blue-light-nav" id="trip-a-modify-{{ trip.id }}">
+                                            <i class="fas fa-pen"></i> Modifier
+                                        </a>
                                     {% elseif trip.state == states.opened or trip.state == states.completed %}
-                                        <a href="{{ path('trip_cancel', {id:trip.id}) }}" class="btn btn-blue-light-nav"><i class="far fa-window-close"></i> Annuler</a>
+                                        <a href="{{ path('trip_cancel', {id:trip.id}) }}" class="btn btn-blue-light-nav">
+                                            <i class="far fa-window-close"></i> Annuler
+                                        </a>
                                     {% endif %}
                                 {% endif %}
                             </div>
                             <div id="trip-buttons-right-{{ trip.id }}">
                                 {% if trip.dateLimitForRegistration > date() %}
                                     {% if app.user not in trip.participants and trip.state == states.opened %}
-                                        <span class="btn btn-blue-light-nav btn-update-participant" data-value="register" data-id="{{ trip.id }}"><i class="fas fa-door-open"></i> S'inscrire</span>
+                                        <span class="btn btn-blue-light-nav btn-update-participant" data-value="register" data-id="{{ trip.id }}">
+                                            <i class="fas fa-door-open"></i> S'inscrire
+                                        </span>
                                     {% elseif app.user in trip.participants and (trip.state == states.opened or trip.state == states.completed) %}
-                                        <span class="btn btn-blue-light-nav btn-update-participant" data-value="cancel" data-id="{{ trip.id }}"><i class="fas fa-sign-out-alt"></i> Se désister</span>
+                                        <span class="btn btn-blue-light-nav btn-update-participant" data-value="cancel" data-id="{{ trip.id }}">
+                                            <i class="fas fa-sign-out-alt"></i> Se désister
+                                        </span>
                                     {% endif %}
                                 {% endif %}
                             </div>
@@ -160,10 +173,14 @@
                 <ul class="pagination">
                     {% if (currentPage > 1) %}
                         <li class="page-item">
-                            <a class="page-link page-inactive" href="{{ path('main_home', {'page': 1}) }}"><i class="fas fa-angle-double-left"></i></a>
+                            <a class="page-link page-inactive" href="{{ path('main_home', {'page': 1}) }}">
+                                <i class="fas fa-angle-double-left"></i>
+                            </a>
                         </li>
                         <li class="page-item">
-                            <a class="page-link page-inactive" href="{{ path('main_home', {'page': currentPage-1}) }}"><i class="fas fa-angle-left"></i></a>
+                            <a class="page-link page-inactive" href="{{ path('main_home', {'page': currentPage-1}) }}">
+                                <i class="fas fa-angle-left"></i>
+                            </a>
                         </li>
                     {% endif %}
 
@@ -171,17 +188,23 @@
                         {% if (num > 0 and num <= totalPages) %}
                             <li class="page-item">
                                 <a class="page-link {% if (num==currentPage) %}text-white page-active{% else %}page-inactive{% endif %}"
-                                   href="{{ path('main_home', {'page': num}) }}">{{ num }}</a>
+                                   href="{{ path('main_home', {'page': num}) }}">
+                                    {{ num }}
+                                </a>
                             </li>
                         {% endif %}
                     {% endfor %}
 
                     {% if (currentPage < totalPages) %}
                         <li class="page-item">
-                            <a class="page-link page-inactive" href="{{ path('main_home', {'page': currentPage+1}) }}"><i class="fas fa-angle-right"></i></a>
+                            <a class="page-link page-inactive" href="{{ path('main_home', {'page': currentPage+1}) }}">
+                                <i class="fas fa-angle-right"></i>
+                            </a>
                         </li>
                         <li class="page-item">
-                            <a class="page-link page-inactive" href="{{ path('main_home', {'page': totalPages}) }}"><i class="fas fa-angle-double-right"></i></a>
+                            <a class="page-link page-inactive" href="{{ path('main_home', {'page': totalPages}) }}">
+                                <i class="fas fa-angle-double-right"></i>
+                            </a>
                         </li>
                     {% endif %}
                 </ul>

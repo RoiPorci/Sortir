@@ -2,7 +2,7 @@
 
 {% block title %}
     {% if tripDetail is null %}
-        sortie non consultable
+        Sortie non consultable
     {% else %}
         {{ parent() }} {{ tripDetail.name }}
     {% endif %}
@@ -142,31 +142,31 @@
                                 </li>
                             </ul>
                             <ul id="table-participants" class="participants-list list-group">
-                            {% for participant in tripDetail.participants %}
-                                <a href="{{ path('profil_show', {id:participant.id}) }}"><li class="list-group-item d-flex">
-                                    <div class="col-6">
-                                        {{ participant.username }}
-                                    </div>
-                                    <div class="col-6">
-                                        {{ participant.firstName }} {{ participant.lastName }}
-                                    </div>
-                                </li></a>
-                            {% endfor %}
+                                {% for participant in tripDetail.participants %}
+                                    <a href="{{ path('profil_show', {id:participant.id}) }}">
+                                        <li class="list-group-item d-flex">
+                                            <div class="col-6">
+                                                {{ participant.username }}
+                                            </div>
+                                            <div class="col-6">
+                                                {{ participant.firstName }} {{ participant.lastName }}
+                                            </div>
+                                        </li>
+                                    </a>
+                                {% endfor %}
                             </ul>
                     {% endif %}
                     {% if tripDetail.organiser == app.user %}
                         <div id="trip_detail" class="my-4 d-flex justify-content-between">
                             {% if tripDetail.state == states.opened %}
-                            <a class="btn btn-blue-light col-5" href="{{ path('trip_cancel', {id:tripDetail.id}) }}">Annuler la sortie</a>
+                                <a class="btn btn-blue-light col-5" href="{{ path('trip_cancel', {id:tripDetail.id}) }}">Annuler la sortie</a>
                             {% elseif tripDetail.state == states.created %}
-                            <a class="btn btn-blue-light col-5" href="{{ path('trip_modify', {id:tripDetail.id}) }}">Modifier la sortie</a>
+                                <a class="btn btn-blue-light col-5" href="{{ path('trip_modify', {id:tripDetail.id}) }}">Modifier la sortie</a>
                             {% endif %}
                         </div>
                     {% endif %}
                 </div>
-
             </div>
-
         {% endif %}
     </div>
 {% endblock %}
