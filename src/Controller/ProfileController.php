@@ -84,7 +84,7 @@ class ProfileController extends AbstractController
             $manager->refresh($this->getUser());
         }
 
-        return $this->render('profil/updateProfil.html.twig', [
+        return $this->render('updateProfile.html.twig', [
             'profilForm' => $form->createView(),
         ]);
     }
@@ -94,7 +94,7 @@ class ProfileController extends AbstractController
      */
     public function showProfil(int $id, UserRepository $userRepository) {
 
-        return $this->render('profil/showProfil.html.twig', [
+        return $this->render('showProfile.html.twig', [
             'user' => $userRepository->find($id)
         ]);
     }
