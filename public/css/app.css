@@ -141,6 +141,11 @@ h1, h2, h3, h4, h6, h5, .nav-item, .btn {
 .trip_buttons .btn-blue-light-retour {
     padding: 15px 0px;
 }
+
+#trip_detail > a {
+    width: 100%;
+    padding: 15px 0px;
+}
 /* ------------------------------------ NAV ------------------------------------ */
 
 .nav-item a {
@@ -296,6 +301,12 @@ home-trip-title > span:last-child, .home-wording {
     background: #23c4f0;
     color: #212529;
     transition: all 0.5s;
+}
+
+#trip-registered {
+    text-transform: uppercase;
+    color: #23c4f0;
+    font-family: 'Montserrat', sans-serif;
 }
 
 /* ------------------------------------ Sortie ------------------------------------ */

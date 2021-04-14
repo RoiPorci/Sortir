@@ -125,7 +125,7 @@
                             <span class="col-2 text-right home-wording">Fin d'inscription le {{ trip.dateLimitForRegistration|date('d/m/Y') }}</span>
                         </div>
                         <p class="card-text">{{ trip.details }}</p>
-                        <div class="d-flex justify-content-between">
+                        <div class="d-flex justify-content-between mt-4">
 
                             <div id="trip-buttons-left-{{ trip.id }}">
                                 {% if trip.state != states.created %}
