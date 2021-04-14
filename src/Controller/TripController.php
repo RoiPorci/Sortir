@@ -98,11 +98,31 @@ class TripController extends AbstractController
      */
     public function modify(int $id, Request $request, TripRepository $tripRepository, EntityManagerInterface $entityManager): Response
     {
+        $user = $this->getUser();
+        $trip = $tripRepository->findTripWithoutParticipants($id, $user);
 
-        $trip = $tripRepository->findTripWithoutParticipants($id);
+        if ($this->states['created'] !== $trip->getState()){
+            $this->addFlash('danger', 'Vous ne pouvez plus modifier cette sortie!');
+            $this->redirectToRoute('main_home');
+        }
+
         $form = $this->createForm(TripType::class, $trip);
 
         $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $button = $form->getClickedButton()->getName();
+            if ($button == 'opened') {
+                $trip->setState($this->states['opened']);
+            }
+
+            $entityManager->persist($trip);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Votre sortie a bien été modifiée');
+
+            return $this->redirectToRoute('trip_getDetail', ['id' => $trip->getId()]);
+        }
 
         $location = $trip->getLocation();
 
@@ -121,7 +141,6 @@ class TripController extends AbstractController
      * @param EntityManagerInterface $entityManager
      * @return Response
      */
-
     public function cancelTrip(int $id, Request $request, TripRepository $tripRepository, StateRepository $stateRepository, EntityManagerInterface $entityManager) {
 
         /** @var User $user */
@@ -134,13 +153,14 @@ class TripController extends AbstractController
         }
 
         $form = $this->createForm(CancelTripType::class, $trip);
-        $tripWording = $trip->getState()->getWording();
+        $tripState = $trip->getState();
         $now = new \DateTime();
         $oldDetailTrip = $trip->getDetails();
 
-        if ($trip->getOrganiser()->getUsername() !== $user->getUsername()
+        if ($trip->getOrganiser() !== $user
             || $trip->getDateTimeStart() < $now
-            || ($tripWording == "Activité en cours" || $tripWording == "Passée" || $tripWording == "Annulée")) {
+            || $tripState == $this->states['canceled']
+            || $tripState == $this->states['created']) {
 
             $this->addFlash('warning', 'Vous ne pouvez pas annuler cette sortie !');
             return $this->redirectToRoute('trip_getDetail', ['id' => $trip->getId()]);

@@ -9,6 +9,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @method Trip|null find($id, $lockMode = null, $lockVersion = null)
@@ -203,12 +204,15 @@ class TripRepository extends ServiceEntityRepository
         return $result;
     }
 
-    public function findTripWithoutParticipants($id)
+    public function findTripWithoutParticipants(int $id, UserInterface $organiser)
     {
         $queryBuilder = $this->createQueryBuilder('t');
 
         $queryBuilder->andWhere('t.id = :id');
         $queryBuilder->setParameter('id', $id);
+
+        $queryBuilder->andWhere('t.organiser = :organiser');
+        $queryBuilder->setParameter('organiser', $organiser);
 
         //On ajoute des jointures pour éviter les multiples requêtes par Doctrine
         $queryBuilder->join('t.organiserCampus', 'c');

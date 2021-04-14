@@ -70,6 +70,9 @@ class TripType extends AbstractType
             ->add('create', SubmitType::class, [
                 'label' => 'Enregistrer'
             ])
+            ->add('publish', SubmitType::class, [
+                'label' => 'Publier'
+            ])
             ->addEventListener(FormEvents::PRE_SET_DATA, [$this, 'onPreSetData'])
             ->addEventListener(FormEvents::PRE_SUBMIT, [$this, 'onPreSubmit'])
         ;
@@ -107,8 +110,8 @@ class TripType extends AbstractType
     }
 
     public function addModifyElements(FormInterface $form, Trip $trip = null){
-        if ($trip){
-            if ($trip->getId()){
+        if ($trip) {
+            if ($trip->getId()) {
                 $form->add('organiserCampus', EntityType::class, [
                     'class' => Campus::class,
                     'placeholder' => false,
@@ -118,23 +121,7 @@ class TripType extends AbstractType
                     "attr" => [
                         "class" => "form-select"],
                 ]);
-
-                if ($trip->getState() == $this->states['created']){
-                    $form->add('publish', SubmitType::class, [
-                        'label' => 'Publier'
-                    ]);
-                }
             }
-            else {
-                $form->add('publish', SubmitType::class, [
-                    'label' => 'Publier'
-                ]);
-            }
-        }
-        else {
-            $form->add('publish', SubmitType::class, [
-                'label' => 'Publier'
-            ]);
         }
     }
 
