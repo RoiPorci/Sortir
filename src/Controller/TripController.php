@@ -103,7 +103,7 @@ class TripController extends AbstractController
 
         if ($this->states['created'] !== $trip->getState()){
             $this->addFlash('danger', 'Vous ne pouvez plus modifier cette sortie!');
-            $this->redirectToRoute('main_home');
+            return $this->redirectToRoute('main_home');
         }
 
         $form = $this->createForm(TripType::class, $trip);
