@@ -37,12 +37,12 @@
                     <div class="navbar-nav justify-content-end">
                         <ul class="navbar-nav gap-2 me-auto mb-2 mb-lg-0">
                             <li class="nav-item">
-                                <a class="btn link-blue-light" aria-current="page" href="{{ path('main_home') }}">
-                                    <i class="fas fa-home"></i> Accueil
-                                </a>
                                 {%  if app.user %}
-                                    <a class="btn link-blue-light" aria-current="page" href="{{ path('profil_show', {id: app.user.id }) }}">
-                                    <i class="fas fa-user-circle"></i> Mon Profil
+                                    <a class="btn link-blue-light" aria-current="page" href="{{ path('main_home') }}">
+                                        <i class="fas fa-home"></i> Accueil
+                                    </a>
+                                    <a class="btn link-blue-light" aria-current="page" href="{{ path('profil_updatedProfil', {id: app.user.id }) }}">
+                                        <i class="fas fa-user-circle"></i> Mon Profil
                                     </a>
                                 {% endif %}
                             </li>

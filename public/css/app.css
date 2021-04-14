@@ -147,15 +147,11 @@ form .form-error-icon{
     scrollbar-color: #1ED8FF;
 }
 
-select[id='trip_city'] {
-    width: 120%;
+select[id='trip_city'], select[id='trip_organiserCampus'], select[id='trip_location'] {
+    width: 180%;
 }
 
-#form_cancel_trip > .form-group {
-    display: flex;
-}
-
-#form_cancel_trip > form > .form-group {
+#form_cancel_trip > .form-group, #form_cancel_trip > form > .form-group {
     display: flex;
 }
 
@@ -206,6 +202,16 @@ select[id='trip_city'] {
     color: #AAAAAA;
 }
 
+.home-trip-subtitle > span > a {
+    color: #1ED8FF;
+    transition: all 0.3s;
+}
+
+.home-trip-subtitle > span > a:hover {
+    color: #AAAAAA;
+    transition: all 0.3s;
+}
+
 home-trip-title > span:last-child, .home-wording {
     text-align: right;
 }
@@ -214,6 +220,12 @@ home-trip-title > span:last-child, .home-wording {
     background: #23D9FF;
     border: none;
     color: #fff;
+    border: 1px solid #ced4da;
+    border-right: 0px
+}
+
+#list_trip_name {
+    border-left: 0px;
 }
 
 .card-body p {
@@ -245,6 +257,18 @@ home-trip-title > span:last-child, .home-wording {
 
 #table-participants {
     border-radius: 0px;
+}
+
+#table-participants > a, #trip_organisateur > a {
+    color: black;
+    transition: all 0.3s;
+}
+
+#table-participants > a:hover > li, #trip_organisateur > a:hover > li {
+    background: #212529;
+    border: 1px solid transparent;
+    color: #1ED8FF;
+    transition: all 0.5s;
 }
 
 /* ------------------------------------ Profil ------------------------------------ */

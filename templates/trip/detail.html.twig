@@ -118,16 +118,16 @@
                     </ul>
                 </div>
 
-                <div class="col-sm-12 col-md-4 mt-5">
+                <div id="trip_organisateur" class="col-sm-12 col-md-4 mt-5">
                     <h5 class="mb-2 pt-3">Organisateur</h5>
-                    <li class="list-group-item d-flex">
+                    <a href="{{ path('profil_show', {id:tripDetail.organiser.id}) }}"><li class="list-group-item d-flex">
                         <div class="col-6">
                             {{ tripDetail.organiser.username }}
                         </div>
                         <div class="col-6">
                             {{ tripDetail.organiser.firstName }} {{ tripDetail.organiser.lastName }}
                         </div>
-                    </li>
+                    </li></a>
 
                     {% if tripDetail.participants is not null %}
                         <h5 class="mb-2 pt-5">Liste des participants</h5>
@@ -143,14 +143,14 @@
                             </ul>
                             <ul id="table-participants" class="participants-list list-group">
                             {% for participant in tripDetail.participants %}
-                                <li class="list-group-item d-flex">
+                                <a href="{{ path('profil_show', {id:participant.id}) }}"><li class="list-group-item d-flex">
                                     <div class="col-6">
                                         {{ participant.username }}
                                     </div>
                                     <div class="col-6">
                                         {{ participant.firstName }} {{ participant.lastName }}
                                     </div>
-                                </li>
+                                </li></a>
                             {% endfor %}
                             </ul>
                     {% endif %}

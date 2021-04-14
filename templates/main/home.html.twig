@@ -121,7 +121,7 @@
                             <span class="col-2 text-right home-wording">Etat : <span id="trip-state-wording-{{ trip.id }}">{{ trip.state.wording }}</span></span>
                         </div>
                         <div class="card-subtitle home-trip-subtitle mb-2 d-flex justify-content-between">
-                            <span class="col-7 text-left">Organisateur : {{ trip.organiser.username }}</span>
+                            <span class="col-7 text-left"><a href="{{ path('profil_show', {id: trip.organiser.id}) }}">Organisateur : {{ trip.organiser.username }}</a></span>
                             <span class="col-2 text-center">Inscrits : <span id="trip-participants-lenght-{{ trip.id }}">{{ trip.participants|length }}</span>/{{ trip.maxRegistrationNumber }}</span>
                             <span class="col-2 text-right home-wording">Fin d'inscription le {{ trip.dateLimitForRegistration|date('d/m/Y') }}</span>
                         </div>
