@@ -151,8 +151,6 @@ class TripType extends AbstractType
         $trip = $event->getData();
         $form = $event->getForm();
 
-        /*dd($trip);*/
-
         if($trip->getLocation()){
             $city = $trip->getLocation()->getCity();
         }

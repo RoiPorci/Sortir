@@ -109,6 +109,8 @@ class TripController extends AbstractController
         return $this->render('trip/modifyTrip.html.twig', [
             'tripForm' => $form->createView(),
             'location' => $location,
+            'created' => $this->states['created'],
+            'trip' => $trip,
         ]);
     }
 
