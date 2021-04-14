@@ -101,6 +101,9 @@ h1, h2, h3, h4, h6, h5, .nav-item, .btn {
 
 /* ------------------------------------ Form Profil - Form Trip ------------------------------------ */
 
+form .form-error-icon{
+    display: none;
+}
 
 #formProfil {
     margin-left: 30px;

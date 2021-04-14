@@ -42,20 +42,31 @@ class ProfilController extends AbstractController
             $uploadedFile = $form->get('picture')->getData();
 
             if ($uploadedFile) {
-            $newFileName = ByteString::fromRandom(30) . "." . $uploadedFile->guessExtension();
-            try {
-                $uploadedFile->move($this->getParameter('upload_dir'), $newFileName);
-            } catch (\Exception $e){
-                dd($e->getMessage());
-            }
+                // upload de la nouvelle image
+                $newFileName = ByteString::fromRandom(30) . "." . $uploadedFile->guessExtension();
+                try {
+                    $uploadedFile->move($this->getParameter('upload_dir'), $newFileName);
+                } catch (\Exception $e){
+                    dd($e->getMessage());
+                }
 
-            $simpleImage = new SimpleImage();
-            $simpleImage->fromFile($this->getParameter('upload_dir') . "/$newFileName")
-                ->thumbnail(330,460)
-                ->desaturate()
-                ->toFile($this->getParameter('upload_dir') . "/small/$newFileName");
+                $simpleImage = new SimpleImage();
+                $simpleImage->fromFile($this->getParameter('upload_dir') . "/$newFileName")
+                    ->thumbnail(330,460)
+                    ->desaturate()
+                    ->toFile($this->getParameter('upload_dir') . "/small/$newFileName");
 
-            $user->setPictureFilename($newFileName);
+                // suppression de l'originale
+                unlink($this->getParameter('upload_dir') . "/$newFileName");
+
+                // suppression de l'ancienne image si il y en a une
+                $oldPicture = $user->getPictureFilename();
+                if ($oldPicture){
+                    unlink($this->getParameter('upload_dir') . "/small/$oldPicture");
+                }
+
+                // affectation de la nouvelle image à l'utilisateur
+                $user->setPictureFilename($newFileName);
             }
 
             $manager->persist($user);
@@ -66,10 +77,12 @@ class ProfilController extends AbstractController
 
             return $this->redirectToRoute('profil_show', ['id' => $user->getId()]);
         }
+        else {
+            $manager->refresh($this->getUser());
+        }
 
         return $this->render('profil/updateProfil.html.twig', [
             'profilForm' => $form->createView(),
-            'user' => $user
         ]);
     }
 
