@@ -52,7 +52,7 @@
                 <div class="col-4 mr-5">
                     {{ form_row(tripForm.create) }}
                 </div>
-                {% if created == trip.state %}
+                {% if states.created == trip.state %}
                     <div class="col-4 mr-5">
                         {{ form_row(tripForm.publish) }}
                     </div>

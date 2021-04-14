@@ -94,7 +94,7 @@ class Trip
      * )
      * @Assert\Length(
      *     min=3,
-     *     max=250,
+     *     max=1500,
      *     minMessage="{{ limit }} caractères minimum svp!",
      *     maxMessage="{{ limit }} caractères maximum svp!"
      * )
