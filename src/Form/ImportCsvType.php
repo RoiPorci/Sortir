@@ -22,7 +22,7 @@ class ImportCsvType extends AbstractType
                         'message' => 'Veuillez charger un fichier!'
                     ]),
                     /*new File([
-                        'mimeTypes' => 'text/csv',
+                        //'mimeTypes' => 'text/csv',
                         'mimeTypesMessage' => 'Frère upload que du csv!'
                     ])*/
                 ]
