@@ -29,10 +29,13 @@ class AdminController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
             /** @var UploadedFile $uploadedCsv */
             $uploadedCsv = $form->get('fileCsv')->getData();
+            $splFile = $uploadedCsv->openFile();
 
-            $data = $serializer->deserialize($uploadedCsv, User::class,'csv', ['groups' => 'import_csv']);
+            while (!$splFile->eof()) {
+                $data[] = $splFile->fgetcsv();
+            }
 
-            dd($data);
+            var_dump($data);
         }
 
         return $this->render('admin/import-csv.html.twig', [

@@ -21,10 +21,10 @@ class ImportCsvType extends AbstractType
                     new NotBlank([
                         'message' => 'Veuillez charger un fichier!'
                     ]),
-                    new File([
+                    /*new File([
                         'mimeTypes' => 'text/csv',
                         'mimeTypesMessage' => 'Frère upload que du csv!'
-                    ])
+                    ])*/
                 ]
             ])
         ;
