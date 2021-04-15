@@ -249,6 +249,8 @@ select[id='trip_city'], select[id='trip_organiserCampus'], select[id='trip_locat
 
 .home-trip-title > h5 {
     font-size: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .home-trip-subtitle {
