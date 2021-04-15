@@ -17,10 +17,11 @@ function init(event){
 
     btnsUpdate.forEach( (btnUpdate) => {
         btnUpdate.addEventListener('click', updateUserOnTrip);
-
     });
 }
 
+
+//***************************************** UPDATE USER ON TRIP *************************************************
 /**
  * updates the registration of the participant authenticated on the trip
  * depending on the value of the update button (register or cancel)
@@ -42,6 +43,8 @@ function updateUserOnTrip(event){
                 return response.json();
             })
             .then(function (data) {
+                //Une fois la réponse reçue, Traitement
+
                 if (data.isRegistered) {
                     let i = document.createElement('i');
                     i.setAttribute('class', 'fas fa-sign-out-alt');
@@ -100,6 +103,7 @@ function updateUserOnTrip(event){
 
 }
 
+//***************************************** PUBLISH TRIP *************************************************
 /**
  * publishes a trip (from state created to published)
  * @param event
