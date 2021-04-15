@@ -165,8 +165,8 @@ class AppFixtures extends Fixture
             if ($nbOrginasedTrips > 0) {
                 for ($i = 1; $i <= $nbOrginasedTrips; $i++) {
                     $date = $faker->dateTimeBetween('-2 months', '+8 months');
-                    $startDate = $date;
-                    $endRegisterDate = $date->sub(\DateInterval::createFromDateString('1 week'));
+                    $startDate = clone $date;
+                    $endRegisterDate = $date->modify('-14 days');
                     $duration = $faker->numberBetween(10, 24 * 60);
                     $now = new \DateTime();
 
