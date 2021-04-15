@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} Importer des participants{% endblock %}
+
+{% block body %}
+<div class="container row justify-content-center">
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <div class="mt-5 d-flex justify-content-between">
+        <button class="btn btn-blue-light col-5 mr-5">Importer</button>
+    </div>
+    {{ form_end(form) }}
+</div>
+{% endblock %}

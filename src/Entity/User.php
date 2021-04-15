@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -39,6 +40,7 @@ class User implements UserInterface
      *     message="Seuls les caractères alphanumériques et _ sont acceptés!"
      * )
      * @ORM\Column(type="string", length=50, unique=true)
+     * @Groups({"import_csv"})
      */
     private $username;
 
@@ -50,6 +52,7 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Groups({"import_csv"})
      */
     private $password;
 
@@ -64,6 +67,7 @@ class User implements UserInterface
      *     maxMessage="{{ limit }} caractères maximum svp!"
      * )
      * @ORM\Column(type="string", length=250)
+     * @Groups({"import_csv"})
      */
     private $last_name;
 
@@ -78,6 +82,7 @@ class User implements UserInterface
      *     maxMessage="{{ limit }} caractères maximum svp!"
      * )
      * @ORM\Column(type="string", length=250)
+     * @Groups({"import_csv"})
      */
     private $first_name;
 
@@ -92,6 +97,7 @@ class User implements UserInterface
      *     maxMessage="{{ limit }} caractères maximum svp!"
      * )
      * @ORM\Column(type="string", length=250)
+     * @Groups({"import_csv"})
      */
     private $email;
 
@@ -104,11 +110,13 @@ class User implements UserInterface
      *     message="Votre numéro de téléphone n'est pas valide!"
      * )
      * @ORM\Column(type="string", length=15)
+     * @Groups({"import_csv"})
      */
     private $phone;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"import_csv"})
      */
     private $active;
 
