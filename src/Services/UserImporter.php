@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Entity\User;
 use App\Repository\CampusRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserImporter
@@ -24,13 +25,30 @@ class UserImporter
      */
     private CampusRepository $campusRepository;
     private array $campuses;
+    /**
+     * @var EntityManagerInterface
+     */
+    private EntityManagerInterface $manager;
 
-    public function __construct(UserRepository $userRepository, UserPasswordEncoderInterface $encoder, CampusRepository $campusRepository)
+    public function __construct(EntityManagerInterface $manager,UserRepository $userRepository, UserPasswordEncoderInterface $encoder, CampusRepository $campusRepository)
     {
         $this->userRepository = $userRepository;
         $this->campusRepository = $campusRepository;
         $this->encoder = $encoder;
         $this->campuses = $this->getAllCampuses();
+        $this->manager = $manager;
+    }
+
+    public function insertUsers(array $infoUsers) {
+       array_splice($infoUsers, 0, 1);
+
+       foreach ($infoUsers as $infoUser) {
+           $newUser = $this->createUser($infoUser);
+           $this->manager->persist($newUser);
+       }
+
+       $this->manager->flush();
+
     }
 
     public function getAllCampuses(){

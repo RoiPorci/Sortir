@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\ImportCsvType;
+use App\Services\UserImporter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,7 +20,7 @@ class AdminController extends AbstractController
      * @param SerializerInterface $serializer
      * @return Response
      */
-    public function importUsersFromCsv(Request $request, SerializerInterface $serializer): Response
+    public function importUsersFromCsv(Request $request, UserImporter $importer): Response
     {
 
         $form = $this->createForm(ImportCsvType::class);
@@ -35,7 +36,7 @@ class AdminController extends AbstractController
                 $data[] = $splFile->fgetcsv();
             }
 
-            var_dump($data);
+            $importer->insertUsers($data);
         }
 
         return $this->render('admin/import-csv.html.twig', [
