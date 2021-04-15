@@ -31,6 +31,7 @@ function updateUserOnTrip(event){
     let tripId = btnUpdate.dataset.id;
     let spanState = document.getElementById('trip-state-wording-' + tripId);
     let spanRegisteredNumber = document.getElementById('trip-participants-lenght-' + tripId);
+    let spanRegisteredUser = document.getElementById('trip-user-registered-' + tripId);
 
     //Inscription
     if (btnUpdate.dataset.value == "register") {
@@ -49,6 +50,8 @@ function updateUserOnTrip(event){
                     btnUpdate.dataset.value = "cancel";
 
                     spanRegisteredNumber.innerText = data.tripParticipantsNumber;
+
+                    spanRegisteredUser.innerText = "Inscrit !";
 
                     sendInfoModal('Succès', 'Vous êtes inscrit!', 'success');
                 } else {
@@ -79,6 +82,8 @@ function updateUserOnTrip(event){
                     btnUpdate.dataset.value = "register";
 
                     spanRegisteredNumber.innerText = data.tripParticipantsNumber;
+
+                    spanRegisteredUser.innerText = "";
 
                     sendInfoModal('Succès', 'Votre inscription est annulée!', 'success');
                 } else {
