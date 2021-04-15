@@ -154,12 +154,11 @@ class TripController extends AbstractController
      * @param int $id
      * @param Request $request
      * @param TripRepository $tripRepository
-     * @param StateRepository $stateRepository
      * @param EntityManagerInterface $manager
      * @return Response
      * @throws NonUniqueResultException
      */
-    public function cancelTrip(int $id, Request $request, TripRepository $tripRepository, StateRepository $stateRepository, EntityManagerInterface $manager): Response
+    public function cancelTrip(int $id, Request $request, TripRepository $tripRepository, EntityManagerInterface $manager): Response
     {
 
         /** @var User $user */
@@ -195,8 +194,7 @@ class TripController extends AbstractController
             $text_cancel = $oldDetailTrip ." Motif d'annulation : " .$cancelDetailTrip;
             $trip->setDetails($text_cancel);
 
-            $state = $stateRepository->findBy(['wording'=> 'Annulée'])[0];
-            $trip->setState($state);
+            $trip->setState($this->states['canceled']);
 
             $manager->persist($trip);
             $manager->flush();

@@ -94,19 +94,23 @@ class Updater
      */
     private function defineState(Trip $trip): Trip
     {
-        $now = new \DateTime();
+        if ($trip->getState() == $this->states['canceled']){
+            $now = new \DateTime();
 
-        if ($trip->getDateLimitForRegistration() < $now){
-        $trip->setState($this->states['completed']);
-        }
-        if ($trip->getDateTimeStart() < $now) {
-            $trip->setState($this->states['ongoing']);
-        }
-        if ($trip->getDateTimeStart()->modify('+'.$trip->getDuration().' minutes') < $now){
-            $trip->setState($this->states['past']);
-        }
+            if ($trip->getDateLimitForRegistration() < $now){
+                $state = $this->states['completed'];
+            }
+            if ($trip->getDateTimeStart() < $now) {
+                $state = $this->states['ongoing'];
+            }
+            if ($trip->getDateTimeStart() < $now->modify('-'.$trip->getDuration().' minutes')){
+                $state = $this->states['past'];
+            }
 
-
+            if ($state){
+                $trip->setState($state);
+            }
+        }
         return $trip;
     }
 }

@@ -18,7 +18,8 @@ class CancelTripType extends AbstractType
             ->add('details', TextareaType::class, [
                 'label' => 'Motif :',
                 'required' => false,
-                'mapped' => false
+                'mapped' => false,
+
             ])
             ->add("confirm", SubmitType::class, [
                 'label' => "Confirmer l'annulation"
