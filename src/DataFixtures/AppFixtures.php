@@ -125,8 +125,8 @@ class AppFixtures extends Fixture
         $userTest->setDateCreated(new \DateTime());
         $userTest->setPhone('0612345678');
         $userTest->setActive(true);
-        $userTest->setFirstName('Wayne');
-        $userTest->setLastName('Bruce');
+        $userTest->setLastName('Wayne');
+        $userTest->setFirstName('Bruce');
         $userTest->setCampus($campusStHerblain);
 
         $manager->persist($userTest);
