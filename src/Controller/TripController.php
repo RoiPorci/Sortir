@@ -176,7 +176,7 @@ class TripController extends AbstractController
         $now = new \DateTime();
         $oldDetailTrip = $trip->getDetails();
 
-        //Vérification de la possibilté d'annulation
+        //Vérification de la possibilité d'annulation
         if ($trip->getOrganiser() !== $user
             || $trip->getDateTimeStart() < $now
             || $tripState == $this->states['canceled']
