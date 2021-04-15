@@ -147,7 +147,9 @@ class TripApiController extends AbstractController
         $isOpened = false;
 
         if ($tripParticipantsNumber < $tripMaxRegistrationNumber
-            && $trip->getDateLimitForRegistration() > $now)
+            && $trip->getDateLimitForRegistration() > $now
+            && $trip->getState() !== $this->states['created']
+            && $trip->getState() !== $this->states['canceled'])
         {
             $trip->setState($this->states['opened']);
 
