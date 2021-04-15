@@ -82,7 +82,7 @@ function updateUserOnTrip(event){
 
                     sendInfoModal('Succès', 'Votre inscription est annulée!', 'success');
                 } else {
-                    sendInfoModal('Echec', "Vous n'avez pas pu annuler votre inscription!", 'success');
+                    sendInfoModal('Echec', "Vous n'avez pas pu annuler votre inscription!", 'danger');
                 }
                 if (data.isOpened) {
                     spanState.innerText = "Ouverte";
