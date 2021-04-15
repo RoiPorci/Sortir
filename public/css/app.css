@@ -305,9 +305,10 @@ home-trip-title > span:last-child, .home-wording {
     transition: all 0.5s;
 }
 
-#trip-registered {
+.trip_user_regist {
     text-transform: uppercase;
-    color: #23c4f0;
+    color: #26c92d;
+    letter-spacing: 2px;
     font-family: 'Montserrat', sans-serif;
 }
 

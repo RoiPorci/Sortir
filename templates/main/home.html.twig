@@ -149,6 +149,13 @@
                                     {% endif %}
                                 {% endif %}
                             </div>
+                            <div id="trip-buttons-middle-{{ trip.id }}">
+                                <span class="trip_user_regist" id="trip-user-registered-{{ trip.id }}">
+                                    {% if app.user in trip.participants %}
+                                        Inscrit !
+                                    {% endif %}
+                                </span>
+                            </div>
                             <div id="trip-buttons-right-{{ trip.id }}">
                                 {% if trip.dateLimitForRegistration > date() %}
                                     {% if app.user not in trip.participants and trip.state == states.opened %}
