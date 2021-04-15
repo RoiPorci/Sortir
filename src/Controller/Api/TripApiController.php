@@ -129,7 +129,8 @@ class TripApiController extends AbstractController
         $now = new \DateTime();
 
         //Traitement
-        if ( in_array($user, $tripParticipants) && $trip->getDateLimitForRegistration() > $now )
+        if ( in_array($user, $tripParticipants)
+            && $trip->getDateLimitForRegistration() > $now )
         {
             $trip->removeParticipant($user);
             $manager->persist($trip);
@@ -145,7 +146,8 @@ class TripApiController extends AbstractController
 
         $isOpened = false;
 
-        if ($tripParticipantsNumber < $tripMaxRegistrationNumber)
+        if ($tripParticipantsNumber < $tripMaxRegistrationNumber
+            && $trip->getDateLimitForRegistration() > $now)
         {
             $trip->setState($this->states['opened']);
 
