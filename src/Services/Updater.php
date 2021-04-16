@@ -94,7 +94,7 @@ class Updater
      */
     private function defineState(Trip $trip): Trip
     {
-        if ($trip->getState() == $this->states['canceled']){
+        if ($trip->getState() !== $this->states['canceled']){
             $state = null;
             $now = new \DateTime();
 
